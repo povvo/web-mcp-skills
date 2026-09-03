@@ -1,8 +1,8 @@
-![Web MCP — human UI and site tools sharing one application operation and visible state](assets/web-mcp-repository-banner.svg)
 
-# web-mcp-skills
 
-Two portable Agent Skills and three running WebMCP applications. The `web-mcp` skill builds web applications where the human interface and WebMCP agent tools share one canonical domain operation — no parallel business logic inside tool callbacks, no DOM-click automation dressed up as integration. The `web-mcp-design` skill ships a source-independent visual system that works alongside the first. WebMCP is an experimental browser standard; the skills track what was tested rather than what the specification diagram implies is already stable.
+# Skills for Web MCP
+
+Two agent skills, one for actual work on Web MCP, and the other is an optional extra, mainly so that you can make nice looking outputs with minimal friction. Three running WebMCP applications. The `web-mcp` skill builds web applications where the human interface and WebMCP agent tools share one canonical domain operation, no parallel business logic inside tool callbacks, no DOM-click automation dressed up as integration. The `web-mcp-design` skill ships a source-independent visual system that works alongside the first. WebMCP is an experimental browser standard; the skills track what was tested rather than what the specification diagram implies is already stable.
 
 [![Validate skills](https://github.com/povvo/web-mcp-skills/actions/workflows/validate-skills.yml/badge.svg)](https://github.com/povvo/web-mcp-skills/actions/workflows/validate-skills.yml) ![Node.js ≥ 20](https://img.shields.io/badge/node-%E2%89%A520-3c3c3c?logo=nodedotjs&logoColor=white) ![WebMCP experimental](https://img.shields.io/badge/WebMCP-experimental-525252)
 
