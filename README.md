@@ -1,4 +1,4 @@
-
+![Web MCP — human UI and site tools sharing one application operation and visible state](assets/web-mcp-repository-banner.svg)
 
 # Skills for Web MCP
 
