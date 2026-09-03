@@ -1,0 +1,303 @@
+{
+  "capabilities": [
+    {
+      "capability": "inspect-evidence-desk",
+      "effect": "read",
+      "handler": "inspectEvidenceDesk",
+      "humanEntrypoint": "Read the record index and selected detail.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "mcpTool": null,
+      "operation": "inspect-evidence-desk",
+      "operationModule": "./src/domain.mjs",
+      "operationSource": "new",
+      "resultIdentifiers": [
+        "deskId"
+      ],
+      "resultSummary": "Return all evidence records, the selected record, annotations, and revision.",
+      "stateReads": [
+        "records",
+        "selection",
+        "annotations",
+        "revision"
+      ],
+      "stateWrites": [],
+      "userJourney": "Inspect all sample records, their evidence states, the selected record, annotations, and revision.",
+      "visibleEffect": "No visible state change.",
+      "webmcpTool": "inspect_evidence_desk"
+    },
+    {
+      "capability": "select-evidence-record",
+      "effect": "local-write",
+      "handler": "selectEvidenceRecord",
+      "humanEntrypoint": "Activate a record in the evidence index.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "expectedRevision": {
+            "description": "Desk revision observed immediately before selection.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "recordId": {
+            "description": "Identifier of the record to select.",
+            "enum": [
+              "wpt",
+              "site-tools",
+              "deployment"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "recordId",
+          "expectedRevision"
+        ],
+        "type": "object"
+      },
+      "mcpTool": null,
+      "operation": "select-evidence-record",
+      "operationModule": "./src/domain.mjs",
+      "operationSource": "new",
+      "resultIdentifiers": [
+        "deskId",
+        "recordId"
+      ],
+      "resultSummary": "Return the selected record identity, unchanged evidence state, and committed revision.",
+      "stateReads": [
+        "records",
+        "selection",
+        "revision"
+      ],
+      "stateWrites": [
+        "selection",
+        "revision",
+        "activity"
+      ],
+      "userJourney": "Make one named evidence record the shared visible selection.",
+      "visibleEffect": "The bounded detail region displays the selected record and its unchanged evidence state.",
+      "webmcpTool": "select_evidence_record"
+    },
+    {
+      "capability": "annotate-evidence-record",
+      "effect": "local-write",
+      "handler": "annotateEvidenceRecord",
+      "humanEntrypoint": "Submit the labelled annotation form for the selected record.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "expectedRevision": {
+            "description": "Desk revision observed immediately before annotation.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "note": {
+            "description": "Factual annotation to attach to the record.",
+            "maxLength": 280,
+            "minLength": 1,
+            "type": "string"
+          },
+          "recordId": {
+            "description": "Identifier of the evidence record to annotate.",
+            "enum": [
+              "wpt",
+              "site-tools",
+              "deployment"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "recordId",
+          "note",
+          "expectedRevision"
+        ],
+        "type": "object"
+      },
+      "mcpTool": null,
+      "operation": "annotate-evidence-record",
+      "operationModule": "./src/domain.mjs",
+      "operationSource": "new",
+      "resultIdentifiers": [
+        "deskId",
+        "recordId",
+        "annotationId"
+      ],
+      "resultSummary": "Return the record identity, saved annotation, unchanged evidence state, annotation count, and committed revision.",
+      "stateReads": [
+        "records",
+        "annotations",
+        "revision"
+      ],
+      "stateWrites": [
+        "annotations",
+        "revision",
+        "activity"
+      ],
+      "userJourney": "Attach one factual note to a named record without promoting or resolving its evidence state.",
+      "visibleEffect": "The note appears under the selected record and the revision advances; the record status does not change.",
+      "webmcpTool": "annotate_evidence_record"
+    }
+  ],
+  "compilerVersion": "3.0.0",
+  "experimentalProfiles": {
+    "declarative": false,
+    "serviceWorker": false
+  },
+  "frameworkTarget": "vanilla-js",
+  "handlerReadiness": {
+    "blockers": [],
+    "handlerMappings": [
+      {
+        "handler": "inspectEvidenceDesk",
+        "matches": [
+          {
+            "line": 73,
+            "name": "inspectEvidenceDesk",
+            "path": "src/domain.mjs",
+            "visibility": "exported"
+          }
+        ],
+        "resolved": true,
+        "tool": "inspect_evidence_desk"
+      },
+      {
+        "handler": "selectEvidenceRecord",
+        "matches": [
+          {
+            "line": 74,
+            "name": "selectEvidenceRecord",
+            "path": "src/domain.mjs",
+            "visibility": "exported"
+          }
+        ],
+        "resolved": true,
+        "tool": "select_evidence_record"
+      },
+      {
+        "handler": "annotateEvidenceRecord",
+        "matches": [
+          {
+            "line": 75,
+            "name": "annotateEvidenceRecord",
+            "path": "src/domain.mjs",
+            "visibility": "exported"
+          }
+        ],
+        "resolved": true,
+        "tool": "annotate_evidence_record"
+      }
+    ],
+    "repository": "C:\\Users\\Ethan\\Documents\\ChatGPT\\webmcp\\examples\\evidence-desk",
+    "repositorySha256": "2c85bb6c9cf719ba47423dd784a47094e59fd754742c12c81fcc1e5cc607b42f",
+    "status": "PASS",
+    "target": "vanilla-js",
+    "warnings": []
+  },
+  "maturity": {
+    "declarative": "DISABLED",
+    "documentWebMCP": "IMPLEMENTATION_TARGET",
+    "nativeHostEvidence": "NOT_RUN",
+    "serviceWorker": "DISABLED"
+  },
+  "mode": "CREATE",
+  "operation": "product-plan",
+  "productSha256": "ff10770c8e8391c37cbabd9ea7c4851e7be294421b1bbcd14d0d859821b5246e",
+  "release": "PRODUCTION",
+  "requiredEvidenceGates": [
+    {
+      "class": "deterministic",
+      "id": "contract",
+      "required": true
+    },
+    {
+      "class": "application",
+      "id": "operations",
+      "required": true
+    },
+    {
+      "class": "deterministic",
+      "id": "adapter-runtime",
+      "required": true
+    },
+    {
+      "class": "application",
+      "id": "normal-ui",
+      "required": true
+    },
+    {
+      "class": "browser",
+      "id": "shared-state",
+      "required": true
+    },
+    {
+      "class": "host-native",
+      "id": "native-chromium",
+      "required": true
+    },
+    {
+      "class": "host-native",
+      "id": "native-chatgpt-site-tools",
+      "required": true
+    },
+    {
+      "class": "release",
+      "id": "clean-package",
+      "required": true
+    }
+  ],
+  "status": "PASS",
+  "surface": "WEBMCP",
+  "targets": [
+    "webmcp-document",
+    "chatgpt-site-tools",
+    "chromium-webmcp"
+  ],
+  "toolsetSha256": "e433661cdf93fbaf62b6327036fe0a3ec9a7e77962ffb46992e88df8c6539445",
+  "validation": {
+    "bundleFindings": [],
+    "reports": {
+      "product": {
+        "contract": "product",
+        "documentSha256": "ff10770c8e8391c37cbabd9ea7c4851e7be294421b1bbcd14d0d859821b5246e",
+        "findings": [],
+        "schemaId": "urn:webmcp-site-tools:schema:product:v1",
+        "schemaSha256": "a839f468825a9c227b12d49e89920dfb2e7a1f035f0499c0d5433e9bc44dc23c",
+        "schemaVersion": "webmcp-product.v1",
+        "semanticStatus": "PASS",
+        "status": "PASS",
+        "structuralStatus": "PASS",
+        "summary": {
+          "errors": 0,
+          "findings": 0,
+          "warnings": 0
+        }
+      },
+      "toolset": {
+        "contract": "toolset",
+        "documentSha256": "e433661cdf93fbaf62b6327036fe0a3ec9a7e77962ffb46992e88df8c6539445",
+        "findings": [],
+        "schemaId": "urn:webmcp-site-tools:schema:toolset:v1",
+        "schemaSha256": "1f9a6489f4124630d7e00676c807fb6fcdb4fc9fd4cb92c94acde235e665e209",
+        "schemaVersion": "webmcp-toolset.v1",
+        "semanticStatus": "PASS",
+        "status": "PASS",
+        "structuralStatus": "PASS",
+        "summary": {
+          "errors": 0,
+          "findings": 0,
+          "warnings": 0
+        }
+      }
+    },
+    "status": "PASS",
+    "summary": {
+      "bundleErrors": 0,
+      "bundleWarnings": 0,
+      "documents": 2
+    }
+  }
+}

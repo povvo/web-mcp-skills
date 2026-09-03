@@ -1,0 +1,97 @@
+{
+  "$schema": "../../../assets/schemas/toolset.schema.json",
+  "schemaVersion": "webmcp-toolset.v1",
+  "app": {
+    "name": "Shared Board",
+    "description": "A complete CREATE fixture whose human UI and WebMCP tools use the same revisioned board operations."
+  },
+  "tools": [
+    {
+      "name": "inspect_board",
+      "title": "Inspect board",
+      "description": "Read every item, the item count, and revision from the board visible in the open page. Does not modify the board.",
+      "handler": "inspectBoard",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "untrustedContentHint": true
+      },
+      "registration": {
+        "lifetime": "document",
+        "owner": "The Shared Board document.",
+        "exposedTo": []
+      },
+      "semantics": {
+        "effect": "read",
+        "outputTrust": "user-generated",
+        "confirmation": "none",
+        "idempotency": "natural",
+        "reversible": true,
+        "preconditions": ["The Shared Board document is active."],
+        "visibleEffect": "No visible state change.",
+        "successEvidence": ["The result contains board ID, items, item count, and revision."],
+        "failureModes": ["The operation is cancelled."],
+        "sensitiveInputs": []
+      }
+    },
+    {
+      "name": "add_board_item",
+      "title": "Add board item",
+      "description": "Add one titled item through the canonical board action when the supplied revision is still current. Returns the committed item and new revision.",
+      "handler": "addBoardItem",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Visible title for the new board item.",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "expectedRevision": {
+            "type": "integer",
+            "description": "Board revision observed immediately before the add operation.",
+            "minimum": 0
+          }
+        },
+        "required": ["title", "expectedRevision"],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "untrustedContentHint": false
+      },
+      "registration": {
+        "lifetime": "document",
+        "owner": "The Shared Board document.",
+        "exposedTo": []
+      },
+      "semantics": {
+        "effect": "local-write",
+        "outputTrust": "trusted",
+        "confirmation": "none",
+        "idempotency": "none",
+        "reversible": false,
+        "preconditions": [
+          "The Shared Board document is active.",
+          "expectedRevision matches the current board revision."
+        ],
+        "visibleEffect": "The board list, item count, revision, and activity message display the committed item.",
+        "successEvidence": [
+          "The result identifies the added item and committed revision.",
+          "The visible board contains the returned item at the returned revision."
+        ],
+        "failureModes": [
+          "The title is empty or too long.",
+          "The board revision changed before commit.",
+          "The operation is cancelled."
+        ],
+        "sensitiveInputs": []
+      }
+    }
+  ]
+}

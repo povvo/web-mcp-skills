@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="An ordered release rail with human controls and WebMCP tools over the same operations.">
+    <title>Release Rail · WebMCP example</title>
+    <link rel="stylesheet" href="../_shared/web-mcp-design.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#workspace">Skip to release rail</a>
+    <header class="site-header">
+      <a class="brand" href="../"><span class="brand-mark" aria-hidden="true"></span>WEB MCP</a>
+      <nav class="site-nav" aria-label="Examples"><a href="../shared-board/">Shared Board</a><a aria-current="page" href="./">Release Rail</a><a href="../evidence-desk/">Evidence Desk</a></nav>
+    </header>
+    <main class="shell" id="workspace">
+      <section class="hero" aria-labelledby="page-title">
+        <div><p class="eyebrow">Example 02 · finite sequence</p><h1 id="page-title">Release Rail</h1><p class="lede">A release moves through four durable steps. The path can advance or reopen, but it cannot be congratulated into completion.</p></div>
+        <aside class="hero-note"><p class="meta-label">Site tools</p><p id="runtime-state" class="state-node">Checking WebMCP support</p></aside>
+      </section>
+      <section class="instrument" aria-label="Release rail instrument">
+        <section class="control-panel" aria-labelledby="control-title">
+          <div class="section-head"><h2 id="control-title">Operate path</h2><span class="sample-label">Sample state</span></div>
+          <div class="detail"><dl><dt>Current</dt><dd id="current-step">Freeze tool contract</dd><dt>Revision</dt><dd id="revision">0</dd></dl></div>
+          <div class="actions"><button class="button button-primary" id="advance-step" type="button">Complete current step</button></div>
+          <p class="help">Reopen controls appear beside completed steps. Reopening returns every later step to pending.</p>
+          <p class="status" id="activity" role="status">Release rail ready.</p>
+        </section>
+        <section class="signal-panel" aria-labelledby="path-title">
+          <div class="section-head"><h2 id="path-title">Durable path</h2><span class="state-node" data-state="current">Current node</span></div>
+          <div class="stats" aria-label="Release rail facts"><div class="stat"><strong id="complete-count">0/4</strong><span>Complete</span></div><div class="stat"><strong>4</strong><span>Total steps</span></div><div class="stat"><strong>LOCAL</strong><span>Persistence</span></div></div>
+          <ol class="records path-list" id="release-path"></ol>
+        </section>
+      </section>
+    </main>
+    <footer class="page-footer"><span>Tools: inspect_release_rail · advance_release_step · reopen_release_step</span><a href="../../docs/examples.md#release-rail">Read the example notes</a></footer>
+    <noscript><p class="noscript">JavaScript is required for the shared state and WebMCP registration.</p></noscript>
+    <script type="module" src="./src/ui.mjs"></script>
+  </body>
+</html>

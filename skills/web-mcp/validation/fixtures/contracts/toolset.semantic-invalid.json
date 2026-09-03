@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "webmcp-toolset.v1",
+  "app": {
+    "name": "Semantic Failure Fixture"
+  },
+  "tools": [
+    {
+      "name": "update_fixture",
+      "description": "Update the visible fixture with the supplied value.",
+      "handler": "updateFixture",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "New visible fixture value.",
+            "minLength": 1,
+            "maxLength": 80
+          }
+        },
+        "required": [
+          "missing"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "untrustedContentHint": false
+      },
+      "registration": {
+        "lifetime": "route",
+        "owner": "fixture-route",
+        "exposedTo": [
+          "https://partner.example/path"
+        ]
+      },
+      "semantics": {
+        "effect": "local-write",
+        "outputTrust": "trusted",
+        "confirmation": "none",
+        "idempotency": "natural",
+        "reversible": true,
+        "preconditions": [],
+        "visibleEffect": "The fixture value changes.",
+        "successEvidence": [
+          "The result contains the updated revision."
+        ],
+        "failureModes": [
+          "The route is no longer active."
+        ],
+        "sensitiveInputs": []
+      }
+    }
+  ]
+}

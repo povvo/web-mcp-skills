@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A revisioned shared board with human controls and WebMCP tools over the same operations.">
+    <title>Shared Board · WebMCP example</title>
+    <link rel="stylesheet" href="../_shared/web-mcp-design.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#workspace">Skip to board</a>
+    <header class="site-header">
+      <a class="brand" href="../"><span class="brand-mark" aria-hidden="true"></span>WEB MCP</a>
+      <nav class="site-nav" aria-label="Examples">
+        <a aria-current="page" href="./">Shared Board</a>
+        <a href="../release-rail/">Release Rail</a>
+        <a href="../evidence-desk/">Evidence Desk</a>
+      </nav>
+    </header>
+    <main class="shell" id="workspace">
+      <section class="hero" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">Example 01 · revisioned artifact</p>
+          <h1 id="page-title">Shared Board</h1>
+          <p class="lede">A person and an agent add to one board. Every write carries the revision it observed, because optimism is not a concurrency strategy.</p>
+        </div>
+        <aside class="hero-note">
+          <p class="meta-label">Site tools</p>
+          <p id="runtime-state" class="state-node">Checking WebMCP support</p>
+        </aside>
+      </section>
+      <section class="instrument" aria-label="Shared board instrument">
+        <section class="control-panel" aria-labelledby="add-title">
+          <div class="section-head"><h2 id="add-title">Add one item</h2><span class="state-node">Input</span></div>
+          <form id="add-item-form">
+            <div class="field">
+              <label for="item-title">Item title</label>
+              <input id="item-title" name="title" required maxlength="120" autocomplete="off" aria-describedby="item-help">
+              <p class="help" id="item-help">1–120 characters. Failed input remains in the field.</p>
+            </div>
+            <div class="actions"><button class="button button-primary" type="submit">Add board item</button></div>
+          </form>
+          <p class="status" id="activity" role="status">Board ready.</p>
+        </section>
+        <section class="signal-panel" aria-labelledby="board-title">
+          <div class="section-head"><h2 id="board-title">Current board</h2><span class="state-node" data-state="current">Committed</span></div>
+          <div class="stats" aria-label="Board facts">
+            <div class="stat"><strong id="item-count">0</strong><span>Items</span></div>
+            <div class="stat"><strong id="revision">0</strong><span>Revision</span></div>
+            <div class="stat"><strong>LOCAL</strong><span>Persistence</span></div>
+          </div>
+          <ul class="records" id="board-items" aria-label="Board items"></ul>
+        </section>
+      </section>
+    </main>
+    <footer class="page-footer"><span>Tools: inspect_board · add_board_item</span><a href="../../docs/examples.md#shared-board">Read the example notes</a></footer>
+    <noscript><p class="noscript">JavaScript is required for the shared state and WebMCP registration.</p></noscript>
+    <script type="module" src="./src/ui.mjs"></script>
+  </body>
+</html>

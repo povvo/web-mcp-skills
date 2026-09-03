@@ -1,0 +1,135 @@
+{
+  "$schema": "../../../assets/schemas/product.schema.json",
+  "schemaVersion": "webmcp-product.v1",
+  "mode": "extend",
+  "surface": "dual",
+  "targets": ["webmcp-document"],
+  "release": "development",
+  "applicationRoot": ".",
+  "toolset": "./toolset.json",
+  "product": {
+    "id": "dual-shared-board",
+    "name": "Dual Shared Board",
+    "oneSentence": "Extend an existing board with page-aware WebMCP and page-independent MCP adapters over one canonical operation map.",
+    "audience": ["People and automation clients collaborating on one durable board"],
+    "sharedArtifact": "The durable board record, revision stream, visible page selection, and audit receipts.",
+    "humanWorkflow": {
+      "entrypoint": "Open the existing board page.",
+      "operations": ["board.inspect", "board.add_item", "board.select_visible_item"],
+      "visibleFeedback": "The page reconciles durable revisions and displays its page-only item selection."
+    },
+    "state": {
+      "canonicalOwner": "createSharedBoard in operations.mjs",
+      "persistence": "project-native",
+      "persistenceLocation": "The existing board domain store represented by the executable fixture.",
+      "revisionField": "revision"
+    }
+  },
+  "capabilities": [
+    {
+      "id": "board.inspect",
+      "userJourney": "Inspect the visible board or its durable record through the appropriate surface.",
+      "operation": {
+        "id": "board.inspect",
+        "handler": "inspectBoard",
+        "module": "./operations.mjs",
+        "source": "existing",
+        "effect": "read"
+      },
+      "webmcpTool": {"name": "inspect_visible_board"},
+      "mcpTool": {
+        "name": "inspect_board_record",
+        "adapter": "../../../assets/templates/dual/mcp-adapter.mjs"
+      },
+      "ui": {
+        "humanEntrypoint": "Read the open board list and revision.",
+        "visibleEffect": "No visible state change."
+      },
+      "state": {
+        "reads": ["board.items", "board.revision"],
+        "writes": []
+      },
+      "resultContract": {
+        "summary": "Return board identity, durable items, and revision.",
+        "identifiers": ["boardId"],
+        "revisionField": "revision"
+      },
+      "concurrency": {"strategy": "none"},
+      "successEvidence": ["Both adapters return the same board ID, items, and revision."]
+    },
+    {
+      "id": "board.add_item",
+      "userJourney": "Add an item through the page or service without overwriting a newer revision.",
+      "operation": {
+        "id": "board.add_item",
+        "handler": "addBoardItem",
+        "module": "./operations.mjs",
+        "source": "existing",
+        "effect": "remote-write"
+      },
+      "webmcpTool": {"name": "add_visible_board_item"},
+      "mcpTool": {
+        "name": "add_board_item",
+        "adapter": "../../../assets/templates/dual/mcp-adapter.mjs"
+      },
+      "ui": {
+        "humanEntrypoint": "Submit the existing board add-item form.",
+        "visibleEffect": "The visible board reconciles the committed item and durable revision."
+      },
+      "state": {
+        "reads": ["board.items", "board.revision"],
+        "writes": ["board.items", "board.revision", "board.audit"]
+      },
+      "resultContract": {
+        "summary": "Return the committed item, durable revision, and commit ID.",
+        "identifiers": ["boardId", "commitId"],
+        "revisionField": "revision"
+      },
+      "concurrency": {
+        "strategy": "revision",
+        "expectedRevisionField": "expectedRevision"
+      },
+      "successEvidence": [
+        "A WebMCP commit is readable through MCP at the same revision.",
+        "An MCP commit is reconciled into the visible page revision."
+      ]
+    },
+    {
+      "id": "board.select_visible_item",
+      "userJourney": "Select an item only in the currently open board page.",
+      "operation": {
+        "id": "board.select_visible_item",
+        "handler": "selectVisibleBoardItem",
+        "module": "./operations.mjs",
+        "source": "existing",
+        "effect": "local-write"
+      },
+      "webmcpTool": {"name": "select_visible_board_item"},
+      "ui": {
+        "humanEntrypoint": "Select an item in the board list.",
+        "visibleEffect": "The matching item becomes the visible page selection without changing durable board state."
+      },
+      "state": {
+        "reads": ["board.items", "page.selection"],
+        "writes": ["page.selection"]
+      },
+      "resultContract": {
+        "summary": "Return the selected item ID and current durable revision.",
+        "identifiers": ["boardId", "selectedItemId"],
+        "revisionField": "revision"
+      },
+      "concurrency": {"strategy": "none"},
+      "successEvidence": ["The returned item ID matches the visible page selection."]
+    }
+  ],
+  "profiles": {
+    "document": {"enabled": true},
+    "declarativeProposal": {"enabled": false},
+    "serviceWorkerProposal": {"enabled": false}
+  },
+  "mcp": {
+    "runtime": "node",
+    "transport": "project-native",
+    "adapterEntrypoint": "../../../assets/templates/dual/mcp-adapter.mjs"
+  }
+}

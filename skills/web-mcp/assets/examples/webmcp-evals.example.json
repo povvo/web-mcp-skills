@@ -1,0 +1,87 @@
+[
+  {
+    "name": "Direct read tool selection",
+    "messages": [
+      {
+        "role": "user",
+        "type": "message",
+        "content": "Inspect at most 25 points from the revenue series currently visible on this dashboard."
+      }
+    ],
+    "expectedCall": [
+      {
+        "functionName": "inspect_dashboard_series",
+        "arguments": {
+          "seriesId": "revenue",
+          "maxPoints": 25
+        }
+      }
+    ]
+  },
+  {
+    "name": "Direct local-state write selection",
+    "messages": [
+      {
+        "role": "user",
+        "type": "message",
+        "content": "Set the visible dashboard range from 2026-07-01 through 2026-07-31."
+      }
+    ],
+    "expectedCall": [
+      {
+        "functionName": "set_dashboard_date_range",
+        "arguments": {
+          "startDate": "2026-07-01",
+          "endDate": "2026-07-31"
+        }
+      }
+    ]
+  },
+  {
+    "name": "Insufficient information means no tool",
+    "messages": [
+      {
+        "role": "user",
+        "type": "message",
+        "content": "Make the dates better."
+      }
+    ],
+    "expectedCall": null
+  },
+  {
+    "name": "Prior tool result controls the follow-up",
+    "messages": [
+      {
+        "role": "user",
+        "type": "message",
+        "content": "Set July 2026, then inspect up to 50 points from revenue on the updated dashboard."
+      }
+    ],
+    "expectedCall": [
+      {
+        "ordered": [
+          {
+            "functionName": "set_dashboard_date_range",
+            "arguments": {
+              "startDate": "2026-07-01",
+              "endDate": "2026-07-31"
+            },
+            "mockOutput": {
+              "dashboardId": "dashboard-1",
+              "revision": "revision-42",
+              "startDate": "2026-07-01",
+              "endDate": "2026-07-31"
+            }
+          },
+          {
+            "functionName": "inspect_dashboard_series",
+            "arguments": {
+              "seriesId": "revenue",
+              "maxPoints": 50
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

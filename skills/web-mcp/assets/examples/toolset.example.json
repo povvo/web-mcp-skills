@@ -1,0 +1,128 @@
+{
+  "$schema": "../schemas/toolset.schema.json",
+  "schemaVersion": "webmcp-toolset.v1",
+  "app": {
+    "name": "Acme Analytics",
+    "description": "Example dashboard toolset whose human controls and WebMCP handlers share the visible dashboard state."
+  },
+  "tools": [
+    {
+      "name": "inspect_dashboard_series",
+      "title": "Inspect dashboard series",
+      "description": "Read the plotted series and source labels from the currently visible dashboard. Returns structured chart values, revision, and provenance; does not modify the dashboard.",
+      "handler": "inspectDashboardSeries",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "seriesId": {
+            "type": "string",
+            "description": "Identifier of a series currently visible in the chart.",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "maxPoints": {
+            "type": "integer",
+            "description": "Maximum number of plotted points to return.",
+            "minimum": 1,
+            "maximum": 500,
+            "default": 100
+          }
+        },
+        "required": [
+          "seriesId"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "untrustedContentHint": true
+      },
+      "registration": {
+        "lifetime": "route",
+        "owner": "The analytics dashboard route while the selected dashboard is visible.",
+        "exposedTo": []
+      },
+      "semantics": {
+        "effect": "read",
+        "outputTrust": "external",
+        "confirmation": "none",
+        "idempotency": "natural",
+        "reversible": true,
+        "preconditions": [
+          "The analytics dashboard route is active.",
+          "The requested series is visible to the current authorized user."
+        ],
+        "visibleEffect": "No visible state change.",
+        "successEvidence": [
+          "The result contains the dashboard ID, series ID, point count, and source identifiers."
+        ],
+        "failureModes": [
+          "The series is no longer visible.",
+          "The external data source is unavailable.",
+          "Execution is cancelled."
+        ],
+        "sensitiveInputs": []
+      }
+    },
+    {
+      "name": "set_dashboard_date_range",
+      "title": "Set dashboard date range",
+      "description": "Set the date range through the same action used by the visible dashboard controls and refresh its charts. Returns the applied dates, dashboard ID, and chart revision.",
+      "handler": "setDashboardDateRange",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "startDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Inclusive start date in YYYY-MM-DD form.",
+            "maxLength": 10
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Inclusive end date in YYYY-MM-DD form.",
+            "maxLength": 10
+          }
+        },
+        "required": [
+          "startDate",
+          "endDate"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "untrustedContentHint": false
+      },
+      "registration": {
+        "lifetime": "route",
+        "owner": "The analytics dashboard route.",
+        "exposedTo": []
+      },
+      "semantics": {
+        "effect": "local-write",
+        "outputTrust": "trusted",
+        "confirmation": "none",
+        "idempotency": "natural",
+        "reversible": true,
+        "preconditions": [
+          "The analytics dashboard route is active.",
+          "The current user may view the dashboard."
+        ],
+        "visibleEffect": "The dashboard date controls and charts update to the applied range.",
+        "successEvidence": [
+          "The result contains the applied start date, end date, dashboard ID, and chart revision.",
+          "The visible date controls match the returned range."
+        ],
+        "failureModes": [
+          "The date range is invalid.",
+          "The dashboard route changed.",
+          "Chart refresh failed.",
+          "Execution is cancelled."
+        ],
+        "sensitiveInputs": []
+      }
+    }
+  ]
+}

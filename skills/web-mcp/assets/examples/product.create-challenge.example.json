@@ -1,0 +1,119 @@
+{
+  "$schema": "../schemas/product.schema.json",
+  "schemaVersion": "webmcp-product.v1",
+  "mode": "create",
+  "surface": "webmcp",
+  "targets": [
+    "chatgpt-site-tools",
+    "chromium-webmcp"
+  ],
+  "release": "challenge",
+  "applicationRoot": ".",
+  "toolset": "./toolset.example.json",
+  "product": {
+    "id": "acme-analytics",
+    "name": "Acme Analytics",
+    "oneSentence": "Explore a shared analytics dashboard and change its visible reporting range with the same operations used by the human controls.",
+    "audience": [
+      "Analysts reviewing a dashboard with an agent",
+      "Operators validating the source values behind a chart"
+    ],
+    "sharedArtifact": "The currently visible analytics dashboard and its plotted series.",
+    "humanWorkflow": {
+      "entrypoint": "Open the analytics dashboard route.",
+      "operations": [
+        "inspect-dashboard-series",
+        "set-dashboard-date-range"
+      ],
+      "visibleFeedback": "The same chart, date controls, loading state, and revision indicator reflect human and agent actions."
+    },
+    "state": {
+      "canonicalOwner": "The dashboard store used by the visible controls, charts, and WebMCP handlers.",
+      "persistence": "application-database",
+      "persistenceLocation": "The existing analytics data service and dashboard preference store.",
+      "revisionField": "revision"
+    }
+  },
+  "capabilities": [
+    {
+      "id": "inspect-dashboard-series",
+      "userJourney": "Inspect the exact values and provenance behind a plotted dashboard series without leaving the shared view.",
+      "operation": {
+        "id": "inspect-dashboard-series",
+        "handler": "inspectDashboardSeries",
+        "module": "./src/dashboard/operations.ts",
+        "source": "existing",
+        "effect": "read"
+      },
+      "webmcpTool": {
+        "name": "inspect_dashboard_series"
+      },
+      "ui": {
+        "humanEntrypoint": "Choose a plotted series and open its details.",
+        "visibleEffect": "No visible state change."
+      },
+      "state": {
+        "reads": ["dashboard", "series", "revision", "source-provenance"],
+        "writes": []
+      },
+      "resultContract": {
+        "summary": "Return dashboard and series identity, bounded chart points, source identifiers, and the observed revision.",
+        "identifiers": ["dashboardId", "seriesId"],
+        "revisionField": "revision"
+      },
+      "concurrency": {
+        "strategy": "none"
+      },
+      "successEvidence": [
+        "The result identifies the same dashboard and series shown in the human UI.",
+        "The returned revision and provenance let the caller verify which visible state was inspected."
+      ]
+    },
+    {
+      "id": "set-dashboard-date-range",
+      "userJourney": "Apply a reporting range and immediately review the refreshed shared dashboard.",
+      "operation": {
+        "id": "set-dashboard-date-range",
+        "handler": "setDashboardDateRange",
+        "module": "./src/dashboard/operations.ts",
+        "source": "existing",
+        "effect": "local-write"
+      },
+      "webmcpTool": {
+        "name": "set_dashboard_date_range"
+      },
+      "ui": {
+        "humanEntrypoint": "Set the start and end dates in the dashboard controls.",
+        "visibleEffect": "The dashboard date controls and charts update to the applied range."
+      },
+      "state": {
+        "reads": ["dashboard", "date-range", "revision"],
+        "writes": ["date-range", "chart-data", "revision"]
+      },
+      "resultContract": {
+        "summary": "Return the applied dates, dashboard identity, and resulting chart revision.",
+        "identifiers": ["dashboardId", "startDate", "endDate"],
+        "revisionField": "revision"
+      },
+      "concurrency": {
+        "strategy": "none",
+        "notes": "The canonical date-range action is idempotent and uses application-defined last-write-wins behavior."
+      },
+      "successEvidence": [
+        "The visible date controls match the returned range.",
+        "The returned revision matches the refreshed chart revision."
+      ]
+    }
+  ],
+  "profiles": {
+    "document": {
+      "enabled": true
+    },
+    "declarativeProposal": {
+      "enabled": false
+    },
+    "serviceWorkerProposal": {
+      "enabled": false
+    }
+  }
+}

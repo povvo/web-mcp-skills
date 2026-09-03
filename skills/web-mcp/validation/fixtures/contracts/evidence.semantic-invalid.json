@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "webmcp-evidence.v1",
+  "candidate": {
+    "productSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "toolsetSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "repositoryRevision": "fixture",
+    "dirty": true,
+    "generatedAt": "2026-08-28T10:30:00Z"
+  },
+  "profile": {
+    "release": "development",
+    "targets": [
+      "webmcp-document"
+    ]
+  },
+  "gates": [
+    {
+      "id": "contract",
+      "status": "PASS",
+      "required": true,
+      "startedAt": "2026-08-28T10:01:00Z",
+      "endedAt": "2026-08-28T10:00:00Z",
+      "exitCode": 2,
+      "evidence": []
+    },
+    {
+      "id": "browser",
+      "status": "NOT_RUN",
+      "required": true,
+      "evidence": []
+    }
+  ],
+  "summary": {
+    "status": "PASS",
+    "counts": {
+      "PASS": 2,
+      "FAIL": 0,
+      "BLOCKED": 0,
+      "UNSUPPORTED": 0,
+      "NOT_RUN": 0
+    }
+  }
+}

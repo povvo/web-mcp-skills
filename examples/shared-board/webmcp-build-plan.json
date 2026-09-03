@@ -1,0 +1,226 @@
+{
+  "capabilities": [
+    {
+      "capability": "inspect-board",
+      "effect": "read",
+      "handler": "inspectBoard",
+      "humanEntrypoint": "Read the board list, count, and revision.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "mcpTool": null,
+      "operation": "inspect-board",
+      "operationModule": "./src/domain.mjs",
+      "operationSource": "new",
+      "resultIdentifiers": [
+        "boardId"
+      ],
+      "resultSummary": "Return board identity, all current items, item count, and revision.",
+      "stateReads": [
+        "board",
+        "items",
+        "revision"
+      ],
+      "stateWrites": [],
+      "userJourney": "Inspect the complete current board before deciding what to add.",
+      "visibleEffect": "No visible state change.",
+      "webmcpTool": "inspect_board"
+    },
+    {
+      "capability": "add-board-item",
+      "effect": "local-write",
+      "handler": "addBoardItem",
+      "humanEntrypoint": "Submit the labelled add-item form.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "expectedRevision": {
+            "description": "Board revision observed immediately before the add operation.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "title": {
+            "description": "Visible title for the new board item.",
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "expectedRevision"
+        ],
+        "type": "object"
+      },
+      "mcpTool": null,
+      "operation": "add-board-item",
+      "operationModule": "./src/domain.mjs",
+      "operationSource": "new",
+      "resultIdentifiers": [
+        "boardId",
+        "itemId"
+      ],
+      "resultSummary": "Return board identity, the added item, item count, and committed revision.",
+      "stateReads": [
+        "board",
+        "items",
+        "revision"
+      ],
+      "stateWrites": [
+        "items",
+        "revision",
+        "activity"
+      ],
+      "userJourney": "Add one item without overwriting a newer human or agent edit.",
+      "visibleEffect": "The board list, count, revision, and activity record display the committed item.",
+      "webmcpTool": "add_board_item"
+    }
+  ],
+  "compilerVersion": "3.0.0",
+  "experimentalProfiles": {
+    "declarative": false,
+    "serviceWorker": false
+  },
+  "frameworkTarget": "vanilla-js",
+  "handlerReadiness": {
+    "blockers": [],
+    "handlerMappings": [
+      {
+        "handler": "inspectBoard",
+        "matches": [
+          {
+            "line": 77,
+            "name": "inspectBoard",
+            "path": "src/domain.mjs",
+            "visibility": "exported"
+          }
+        ],
+        "resolved": true,
+        "tool": "inspect_board"
+      },
+      {
+        "handler": "addBoardItem",
+        "matches": [
+          {
+            "line": 78,
+            "name": "addBoardItem",
+            "path": "src/domain.mjs",
+            "visibility": "exported"
+          }
+        ],
+        "resolved": true,
+        "tool": "add_board_item"
+      }
+    ],
+    "repository": "C:\\Users\\Ethan\\Documents\\ChatGPT\\webmcp\\examples\\shared-board",
+    "repositorySha256": "ceb2009e6081509a41e101f5bee0eb56407ee3b6930209fd0acc15998865c1f6",
+    "status": "PASS",
+    "target": "vanilla-js",
+    "warnings": []
+  },
+  "maturity": {
+    "declarative": "DISABLED",
+    "documentWebMCP": "IMPLEMENTATION_TARGET",
+    "nativeHostEvidence": "NOT_RUN",
+    "serviceWorker": "DISABLED"
+  },
+  "mode": "CREATE",
+  "operation": "product-plan",
+  "productSha256": "52e472d43aae06fe9925d55bd56a32a950ac63fc2072f2b24adb82c1c379cc97",
+  "release": "PRODUCTION",
+  "requiredEvidenceGates": [
+    {
+      "class": "deterministic",
+      "id": "contract",
+      "required": true
+    },
+    {
+      "class": "application",
+      "id": "operations",
+      "required": true
+    },
+    {
+      "class": "deterministic",
+      "id": "adapter-runtime",
+      "required": true
+    },
+    {
+      "class": "application",
+      "id": "normal-ui",
+      "required": true
+    },
+    {
+      "class": "browser",
+      "id": "shared-state",
+      "required": true
+    },
+    {
+      "class": "host-native",
+      "id": "native-chromium",
+      "required": true
+    },
+    {
+      "class": "host-native",
+      "id": "native-chatgpt-site-tools",
+      "required": true
+    },
+    {
+      "class": "release",
+      "id": "clean-package",
+      "required": true
+    }
+  ],
+  "status": "PASS",
+  "surface": "WEBMCP",
+  "targets": [
+    "webmcp-document",
+    "chatgpt-site-tools",
+    "chromium-webmcp"
+  ],
+  "toolsetSha256": "823aa2d9a91460ad49757e5a4d8d60c55631759ebd7ddb08a539a4b4234873ed",
+  "validation": {
+    "bundleFindings": [],
+    "reports": {
+      "product": {
+        "contract": "product",
+        "documentSha256": "52e472d43aae06fe9925d55bd56a32a950ac63fc2072f2b24adb82c1c379cc97",
+        "findings": [],
+        "schemaId": "urn:webmcp-site-tools:schema:product:v1",
+        "schemaSha256": "a839f468825a9c227b12d49e89920dfb2e7a1f035f0499c0d5433e9bc44dc23c",
+        "schemaVersion": "webmcp-product.v1",
+        "semanticStatus": "PASS",
+        "status": "PASS",
+        "structuralStatus": "PASS",
+        "summary": {
+          "errors": 0,
+          "findings": 0,
+          "warnings": 0
+        }
+      },
+      "toolset": {
+        "contract": "toolset",
+        "documentSha256": "823aa2d9a91460ad49757e5a4d8d60c55631759ebd7ddb08a539a4b4234873ed",
+        "findings": [],
+        "schemaId": "urn:webmcp-site-tools:schema:toolset:v1",
+        "schemaSha256": "1f9a6489f4124630d7e00676c807fb6fcdb4fc9fd4cb92c94acde235e665e209",
+        "schemaVersion": "webmcp-toolset.v1",
+        "semanticStatus": "PASS",
+        "status": "PASS",
+        "structuralStatus": "PASS",
+        "summary": {
+          "errors": 0,
+          "findings": 0,
+          "warnings": 0
+        }
+      }
+    },
+    "status": "PASS",
+    "summary": {
+      "bundleErrors": 0,
+      "bundleWarnings": 0,
+      "documents": 2
+    }
+  }
+}

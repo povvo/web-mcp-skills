@@ -1,0 +1,63 @@
+{
+  "artifacts": {
+    "adapter": "webmcp-tools.js",
+    "capabilityMap": "webmcp-capabilities.json",
+    "plan": "webmcp-build-plan.json"
+  },
+  "compilerVersion": "3.0.0",
+  "handlerReadiness": {
+    "blockers": [],
+    "handlerMappings": [
+      {
+        "handler": "inspectReleaseRail",
+        "matches": [
+          {
+            "line": 76,
+            "name": "inspectReleaseRail",
+            "path": "src/domain.mjs",
+            "visibility": "exported"
+          }
+        ],
+        "resolved": true,
+        "tool": "inspect_release_rail"
+      },
+      {
+        "handler": "advanceReleaseStep",
+        "matches": [
+          {
+            "line": 77,
+            "name": "advanceReleaseStep",
+            "path": "src/domain.mjs",
+            "visibility": "exported"
+          }
+        ],
+        "resolved": true,
+        "tool": "advance_release_step"
+      },
+      {
+        "handler": "reopenReleaseStep",
+        "matches": [
+          {
+            "line": 78,
+            "name": "reopenReleaseStep",
+            "path": "src/domain.mjs",
+            "visibility": "exported"
+          }
+        ],
+        "resolved": true,
+        "tool": "reopen_release_step"
+      }
+    ],
+    "repository": "C:\\Users\\Ethan\\Documents\\ChatGPT\\webmcp\\examples\\release-rail",
+    "repositorySha256": "5567eac3291b259683abd1edbe7af41a5cca75c7285319f95b86356c38e0c36f",
+    "status": "PASS",
+    "target": "vanilla-js",
+    "warnings": []
+  },
+  "nativeHostEvidence": "NOT_RUN",
+  "productSha256": "e5a79d3df8f01c2d6d6abeb94c0d7e462b82b955d3038f2827c2a499c7e82b0b",
+  "schemaVersion": "webmcp-compile-receipt.v1",
+  "status": "PASS",
+  "target": "vanilla-js",
+  "toolsetSha256": "78a8ab52aba191d6ebdebd1c582b0390622891efd0df6ef1fa7aaef230a2de7b"
+}

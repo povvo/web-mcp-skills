@@ -1,0 +1,283 @@
+{
+  "capabilities": [
+    {
+      "capability": "inspect-release-rail",
+      "effect": "read",
+      "handler": "inspectReleaseRail",
+      "humanEntrypoint": "Read the ordered path and state summary.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "mcpTool": null,
+      "operation": "inspect-release-rail",
+      "operationModule": "./src/domain.mjs",
+      "operationSource": "new",
+      "resultIdentifiers": [
+        "railId"
+      ],
+      "resultSummary": "Return the rail, ordered steps, current step, completion count, and revision.",
+      "stateReads": [
+        "rail",
+        "steps",
+        "revision"
+      ],
+      "stateWrites": [],
+      "userJourney": "Inspect every step and the current durable release position.",
+      "visibleEffect": "No visible state change.",
+      "webmcpTool": "inspect_release_rail"
+    },
+    {
+      "capability": "advance-release-step",
+      "effect": "local-write",
+      "handler": "advanceReleaseStep",
+      "humanEntrypoint": "Activate Complete current step.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "expectedRevision": {
+            "description": "Rail revision observed immediately before advancing.",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "expectedRevision"
+        ],
+        "type": "object"
+      },
+      "mcpTool": null,
+      "operation": "advance-release-step",
+      "operationModule": "./src/domain.mjs",
+      "operationSource": "new",
+      "resultIdentifiers": [
+        "railId",
+        "completedStepId"
+      ],
+      "resultSummary": "Return the completed step, next current step when present, completion count, and committed revision.",
+      "stateReads": [
+        "steps",
+        "revision"
+      ],
+      "stateWrites": [
+        "steps",
+        "revision",
+        "activity"
+      ],
+      "userJourney": "Complete the current step and move the durable path to the next step.",
+      "visibleEffect": "The current node completes and the next pending node becomes current.",
+      "webmcpTool": "advance_release_step"
+    },
+    {
+      "capability": "reopen-release-step",
+      "effect": "local-write",
+      "handler": "reopenReleaseStep",
+      "humanEntrypoint": "Activate Reopen beside a completed step.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "expectedRevision": {
+            "description": "Rail revision observed immediately before reopening.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "stepId": {
+            "description": "Identifier of the completed step to reopen.",
+            "enum": [
+              "contract",
+              "tests",
+              "evidence",
+              "publish"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "stepId",
+          "expectedRevision"
+        ],
+        "type": "object"
+      },
+      "mcpTool": null,
+      "operation": "reopen-release-step",
+      "operationModule": "./src/domain.mjs",
+      "operationSource": "new",
+      "resultIdentifiers": [
+        "railId",
+        "reopenedStepId"
+      ],
+      "resultSummary": "Return the reopened step, affected later steps, completion count, and committed revision.",
+      "stateReads": [
+        "steps",
+        "revision"
+      ],
+      "stateWrites": [
+        "steps",
+        "revision",
+        "activity"
+      ],
+      "userJourney": "Reopen a completed step and return later steps to pending so the route remains truthful.",
+      "visibleEffect": "The named step becomes current and every later step becomes pending.",
+      "webmcpTool": "reopen_release_step"
+    }
+  ],
+  "compilerVersion": "3.0.0",
+  "experimentalProfiles": {
+    "declarative": false,
+    "serviceWorker": false
+  },
+  "frameworkTarget": "vanilla-js",
+  "handlerReadiness": {
+    "blockers": [],
+    "handlerMappings": [
+      {
+        "handler": "inspectReleaseRail",
+        "matches": [
+          {
+            "line": 76,
+            "name": "inspectReleaseRail",
+            "path": "src/domain.mjs",
+            "visibility": "exported"
+          }
+        ],
+        "resolved": true,
+        "tool": "inspect_release_rail"
+      },
+      {
+        "handler": "advanceReleaseStep",
+        "matches": [
+          {
+            "line": 77,
+            "name": "advanceReleaseStep",
+            "path": "src/domain.mjs",
+            "visibility": "exported"
+          }
+        ],
+        "resolved": true,
+        "tool": "advance_release_step"
+      },
+      {
+        "handler": "reopenReleaseStep",
+        "matches": [
+          {
+            "line": 78,
+            "name": "reopenReleaseStep",
+            "path": "src/domain.mjs",
+            "visibility": "exported"
+          }
+        ],
+        "resolved": true,
+        "tool": "reopen_release_step"
+      }
+    ],
+    "repository": "C:\\Users\\Ethan\\Documents\\ChatGPT\\webmcp\\examples\\release-rail",
+    "repositorySha256": "5567eac3291b259683abd1edbe7af41a5cca75c7285319f95b86356c38e0c36f",
+    "status": "PASS",
+    "target": "vanilla-js",
+    "warnings": []
+  },
+  "maturity": {
+    "declarative": "DISABLED",
+    "documentWebMCP": "IMPLEMENTATION_TARGET",
+    "nativeHostEvidence": "NOT_RUN",
+    "serviceWorker": "DISABLED"
+  },
+  "mode": "CREATE",
+  "operation": "product-plan",
+  "productSha256": "e5a79d3df8f01c2d6d6abeb94c0d7e462b82b955d3038f2827c2a499c7e82b0b",
+  "release": "PRODUCTION",
+  "requiredEvidenceGates": [
+    {
+      "class": "deterministic",
+      "id": "contract",
+      "required": true
+    },
+    {
+      "class": "application",
+      "id": "operations",
+      "required": true
+    },
+    {
+      "class": "deterministic",
+      "id": "adapter-runtime",
+      "required": true
+    },
+    {
+      "class": "application",
+      "id": "normal-ui",
+      "required": true
+    },
+    {
+      "class": "browser",
+      "id": "shared-state",
+      "required": true
+    },
+    {
+      "class": "host-native",
+      "id": "native-chromium",
+      "required": true
+    },
+    {
+      "class": "host-native",
+      "id": "native-chatgpt-site-tools",
+      "required": true
+    },
+    {
+      "class": "release",
+      "id": "clean-package",
+      "required": true
+    }
+  ],
+  "status": "PASS",
+  "surface": "WEBMCP",
+  "targets": [
+    "webmcp-document",
+    "chatgpt-site-tools",
+    "chromium-webmcp"
+  ],
+  "toolsetSha256": "78a8ab52aba191d6ebdebd1c582b0390622891efd0df6ef1fa7aaef230a2de7b",
+  "validation": {
+    "bundleFindings": [],
+    "reports": {
+      "product": {
+        "contract": "product",
+        "documentSha256": "e5a79d3df8f01c2d6d6abeb94c0d7e462b82b955d3038f2827c2a499c7e82b0b",
+        "findings": [],
+        "schemaId": "urn:webmcp-site-tools:schema:product:v1",
+        "schemaSha256": "a839f468825a9c227b12d49e89920dfb2e7a1f035f0499c0d5433e9bc44dc23c",
+        "schemaVersion": "webmcp-product.v1",
+        "semanticStatus": "PASS",
+        "status": "PASS",
+        "structuralStatus": "PASS",
+        "summary": {
+          "errors": 0,
+          "findings": 0,
+          "warnings": 0
+        }
+      },
+      "toolset": {
+        "contract": "toolset",
+        "documentSha256": "78a8ab52aba191d6ebdebd1c582b0390622891efd0df6ef1fa7aaef230a2de7b",
+        "findings": [],
+        "schemaId": "urn:webmcp-site-tools:schema:toolset:v1",
+        "schemaSha256": "1f9a6489f4124630d7e00676c807fb6fcdb4fc9fd4cb92c94acde235e665e209",
+        "schemaVersion": "webmcp-toolset.v1",
+        "semanticStatus": "PASS",
+        "status": "PASS",
+        "structuralStatus": "PASS",
+        "summary": {
+          "errors": 0,
+          "findings": 0,
+          "warnings": 0
+        }
+      }
+    },
+    "status": "PASS",
+    "summary": {
+      "bundleErrors": 0,
+      "bundleWarnings": 0,
+      "documents": 2
+    }
+  }
+}

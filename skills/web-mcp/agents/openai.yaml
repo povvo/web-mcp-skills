@@ -1,0 +1,7 @@
+interface:
+  display_name: "web-mcp"
+  short_description: "Create and ship complete WebMCP-powered web products"
+  icon_small: "./assets/web-mcp-icon.svg"
+  icon_large: "./assets/web-mcp-icon.svg"
+  brand_color: "#111111"
+  default_prompt: "Use $web-mcp to create or extend this web product around canonical application operations shared by its human interface and the smallest genuine WebMCP tool surface, adding an independently useful MCP adapter only when dual operation is requested and verifying each selected release gate without overstating unrun host checks."

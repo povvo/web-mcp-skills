@@ -1,0 +1,37 @@
+{
+  "$schema": "../../skills/web-mcp/assets/schemas/toolset.schema.json",
+  "schemaVersion": "webmcp-toolset.v1",
+  "app": {"name": "Evidence Desk", "description": "A selected evidence workspace whose visible controls and WebMCP tools preserve explicit evidence states."},
+  "tools": [
+    {
+      "name": "inspect_evidence_desk",
+      "title": "Inspect evidence desk",
+      "description": "Read every sample evidence record, its explicit status, the selected record, saved annotations, and desk revision. Does not modify the desk.",
+      "handler": "inspectEvidenceDesk",
+      "inputSchema": {"type": "object", "properties": {}, "additionalProperties": false},
+      "annotations": {"readOnlyHint": true, "untrustedContentHint": true},
+      "registration": {"lifetime": "document", "owner": "The Evidence Desk document.", "exposedTo": []},
+      "semantics": {"effect": "read", "outputTrust": "mixed", "confirmation": "none", "idempotency": "natural", "reversible": true, "preconditions": ["The Evidence Desk document is active."], "visibleEffect": "No visible state change.", "successEvidence": ["The result contains every record, explicit state, selected record, annotations, and revision."], "failureModes": ["The operation is cancelled."], "sensitiveInputs": []}
+    },
+    {
+      "name": "select_evidence_record",
+      "title": "Select evidence record",
+      "description": "Select one sample evidence record for shared inspection without changing its observed, prepared, or blocked status.",
+      "handler": "selectEvidenceRecord",
+      "inputSchema": {"type": "object", "properties": {"recordId": {"type": "string", "description": "Identifier of the record to select.", "enum": ["wpt", "site-tools", "deployment"]}, "expectedRevision": {"type": "integer", "description": "Desk revision observed immediately before selection.", "minimum": 0}}, "required": ["recordId", "expectedRevision"], "additionalProperties": false},
+      "annotations": {"readOnlyHint": false, "untrustedContentHint": false},
+      "registration": {"lifetime": "document", "owner": "The Evidence Desk document.", "exposedTo": []},
+      "semantics": {"effect": "local-write", "outputTrust": "trusted", "confirmation": "none", "idempotency": "natural", "reversible": true, "preconditions": ["The record exists.", "expectedRevision matches the current desk revision."], "visibleEffect": "The bounded detail region displays the selected record and its unchanged evidence state.", "successEvidence": ["The result identifies the selected record and unchanged state.", "The visible selection and revision match the result."], "failureModes": ["The record does not exist.", "The desk revision changed before commit.", "The operation is cancelled."], "sensitiveInputs": []}
+    },
+    {
+      "name": "annotate_evidence_record",
+      "title": "Annotate evidence record",
+      "description": "Attach one factual note to a sample evidence record without promoting or resolving its evidence status. Returns the saved note and unchanged status.",
+      "handler": "annotateEvidenceRecord",
+      "inputSchema": {"type": "object", "properties": {"recordId": {"type": "string", "description": "Identifier of the evidence record to annotate.", "enum": ["wpt", "site-tools", "deployment"]}, "note": {"type": "string", "description": "Factual annotation to attach to the record.", "minLength": 1, "maxLength": 280}, "expectedRevision": {"type": "integer", "description": "Desk revision observed immediately before annotation.", "minimum": 0}}, "required": ["recordId", "note", "expectedRevision"], "additionalProperties": false},
+      "annotations": {"readOnlyHint": false, "untrustedContentHint": true},
+      "registration": {"lifetime": "document", "owner": "The Evidence Desk document.", "exposedTo": []},
+      "semantics": {"effect": "local-write", "outputTrust": "user-generated", "confirmation": "none", "idempotency": "none", "reversible": false, "preconditions": ["The record exists.", "expectedRevision matches the current desk revision."], "visibleEffect": "The note appears under the selected record and the revision advances; the record status does not change.", "successEvidence": ["The result identifies the saved annotation and unchanged evidence state.", "The visible annotation and revision match the result."], "failureModes": ["The note is empty or too long.", "The record does not exist.", "The desk revision changed before commit.", "The operation is cancelled."], "sensitiveInputs": []}
+    }
+  ]
+}

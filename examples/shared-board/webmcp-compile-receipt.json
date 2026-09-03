@@ -1,0 +1,50 @@
+{
+  "artifacts": {
+    "adapter": "webmcp-tools.js",
+    "capabilityMap": "webmcp-capabilities.json",
+    "plan": "webmcp-build-plan.json"
+  },
+  "compilerVersion": "3.0.0",
+  "handlerReadiness": {
+    "blockers": [],
+    "handlerMappings": [
+      {
+        "handler": "inspectBoard",
+        "matches": [
+          {
+            "line": 77,
+            "name": "inspectBoard",
+            "path": "src/domain.mjs",
+            "visibility": "exported"
+          }
+        ],
+        "resolved": true,
+        "tool": "inspect_board"
+      },
+      {
+        "handler": "addBoardItem",
+        "matches": [
+          {
+            "line": 78,
+            "name": "addBoardItem",
+            "path": "src/domain.mjs",
+            "visibility": "exported"
+          }
+        ],
+        "resolved": true,
+        "tool": "add_board_item"
+      }
+    ],
+    "repository": "C:\\Users\\Ethan\\Documents\\ChatGPT\\webmcp\\examples\\shared-board",
+    "repositorySha256": "ceb2009e6081509a41e101f5bee0eb56407ee3b6930209fd0acc15998865c1f6",
+    "status": "PASS",
+    "target": "vanilla-js",
+    "warnings": []
+  },
+  "nativeHostEvidence": "NOT_RUN",
+  "productSha256": "52e472d43aae06fe9925d55bd56a32a950ac63fc2072f2b24adb82c1c379cc97",
+  "schemaVersion": "webmcp-compile-receipt.v1",
+  "status": "PASS",
+  "target": "vanilla-js",
+  "toolsetSha256": "823aa2d9a91460ad49757e5a4d8d60c55631759ebd7ddb08a539a4b4234873ed"
+}

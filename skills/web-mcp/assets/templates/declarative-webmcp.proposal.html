@@ -1,0 +1,87 @@
+<!--
+  DECLARATIVE WEBMCP PROPOSAL SCAFFOLD
+
+  Maturity: PROPOSAL
+  ChatGPT Site tools: UNSUPPORTED
+  Document API conformance: NOT_CLAIMED
+  Test evidence: MOCK_ONLY until a named browser profile is exercised
+
+  The form attributes, SubmitEvent additions, pseudo-classes, event target,
+  and schema synthesis remain proposal-level. Keep the application's ordinary
+  validation, authorization, confirmation, and submission path authoritative.
+-->
+<form
+  id="__FORM_ID_HTML__"
+  toolname="__TOOL_NAME_HTML__"
+  tooldescription="__DESCRIPTION_HTML__"__AUTOSUBMIT_ATTRIBUTE__>
+  <label for="__FORM_ID_HTML__-query">Query</label>
+  <input
+    id="__FORM_ID_HTML__-query"
+    name="query"
+    type="text"
+    required
+    maxlength="200"
+    toolparamdescription="The narrowly scoped query for this proposal tool.">
+  <button type="submit">Review and submit</button>
+</form>
+
+<script type="module">
+  const proposalStatus = Object.freeze({
+    profile: "declarative-webmcp",
+    maturity: "PROPOSAL",
+    chatgptSiteToolsSupport: "UNSUPPORTED",
+    documentApiConformance: "NOT_CLAIMED",
+    browserConformance: "NOT_RUN",
+    testEvidence: "MOCK_ONLY",
+    toolName: __TOOL_NAME_JSON__,
+    description: __DESCRIPTION_JSON__,
+  });
+  globalThis.webmcpDeclarativeProposalStatus = proposalStatus;
+
+  const form = document.querySelector("#__FORM_ID_HTML__");
+  form?.addEventListener("submit", (event) => {
+    if (event.agentInvoked !== true) return;
+
+    const submitOperation = globalThis.webmcpDeclarativeProposalSubmit;
+    if (typeof event.respondWith !== "function" || typeof submitOperation !== "function") {
+      throw new Error(
+        "Declarative WebMCP proposal runtime is unavailable; preserve the normal form path.",
+      );
+    }
+
+    event.preventDefault();
+    const input = Object.fromEntries(new FormData(form));
+    event.respondWith(Promise.resolve(submitOperation(input)));
+  });
+
+  // The proposal has not settled the event target. Tests or a named browser
+  // profile must inject the exact target instead of assuming Window or form.
+  const proposalEventTarget = globalThis.webmcpDeclarativeProposalEventTarget;
+
+  proposalEventTarget?.addEventListener("toolactivated", (event) => {
+    if (event.toolName === __TOOL_NAME_JSON__) {
+      form?.setAttribute("data-webmcp-proposal-state", "active");
+    }
+  });
+
+  // `toolcanceled` is the spelling in the supplied official proposal/spec
+  // material. Event target and cross-implementation support remain unresolved.
+  proposalEventTarget?.addEventListener("toolcanceled", (event) => {
+    if (event.toolName === __TOOL_NAME_JSON__) {
+      form?.removeAttribute("data-webmcp-proposal-state");
+    }
+  });
+</script>
+
+<style>
+  /* These pseudo-classes are proposal syntax and require named-target testing. */
+  form:tool-form-active {
+    outline: 2px dashed currentColor;
+    outline-offset: 4px;
+  }
+
+  button:tool-submit-active {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+</style>

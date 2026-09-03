@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "webmcp-release.v1",
+  "release": "production",
+  "product": "./product.json",
+  "toolset": "./toolset.json",
+  "evidence": "./evidence.json",
+  "application": {
+    "name": "Release Fixture",
+    "liveUrl": "https://release.example/",
+    "sourceRepository": "https://github.com/example/release-fixture",
+    "license": "./LICENSE",
+    "runInstructions": "./README.md"
+  },
+  "claims": [
+    {
+      "id": "shared-state",
+      "statement": "The tool updates visible shared state.",
+      "evidenceGateIds": [
+        "browser"
+      ]
+    },
+    {
+      "id": "shared-state",
+      "statement": "The duplicate claim should be rejected.",
+      "evidenceGateIds": [
+        "browser"
+      ]
+    }
+  ],
+  "compatibility": [
+    {
+      "target": "chromium-webmcp",
+      "status": "PASS",
+      "evidenceGateIds": []
+    },
+    {
+      "target": "chromium-webmcp",
+      "status": "NOT_RUN",
+      "evidenceGateIds": []
+    }
+  ]
+}

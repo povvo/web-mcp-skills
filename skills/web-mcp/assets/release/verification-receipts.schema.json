@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:webmcp-site-tools:schema:verification-receipts:v1",
+  "title": "Candidate-bound external verification receipts",
+  "type": "object",
+  "required": ["schemaVersion", "candidate", "receipts"],
+  "properties": {
+    "$schema": {"type": "string", "minLength": 1},
+    "schemaVersion": {"const": "webmcp-verification-receipts.v1"},
+    "candidate": {
+      "type": "object",
+      "required": ["productSha256", "toolsetSha256"],
+      "properties": {
+        "productSha256": {"$ref": "#/$defs/sha256"},
+        "toolsetSha256": {"$ref": "#/$defs/sha256"}
+      },
+      "additionalProperties": false
+    },
+    "receipts": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/receipt"}
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "evidence": {
+      "type": "object",
+      "required": ["kind", "value"],
+      "properties": {
+        "kind": {"enum": ["file", "command", "url", "screenshot", "log", "receipt", "note"]},
+        "value": {"type": "string", "minLength": 1, "pattern": "\\S"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "additionalProperties": false
+    },
+    "challengeEnvironment": {
+      "type": "object",
+      "required": [
+        "liveUrl", "liveUrlPublic", "sourceRepository", "sourceRepositoryPublic",
+        "repositoryContents", "demoUrl", "demoPublic", "demoDurationSeconds", "audioPresent"
+      ],
+      "properties": {
+        "liveUrl": {"type": "string", "format": "uri", "pattern": "^https://"},
+        "liveUrlPublic": {"const": true},
+        "sourceRepository": {"type": "string", "format": "uri", "pattern": "^https://"},
+        "sourceRepositoryPublic": {"const": true},
+        "repositoryContents": {
+          "type": "object",
+          "required": ["sourceCode", "assets", "runInstructions", "openSourceLicense"],
+          "properties": {
+            "sourceCode": {"const": true},
+            "assets": {"const": true},
+            "runInstructions": {"const": true},
+            "openSourceLicense": {"const": true}
+          },
+          "additionalProperties": false
+        },
+        "demoUrl": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://(?:www\\.|m\\.)?(?:youtube\\.com/(?:watch\\?|shorts/|live/)|youtu\\.be/)"
+        },
+        "demoPublic": {"const": true},
+        "demoDurationSeconds": {"type": "integer", "minimum": 1, "maximum": 179},
+        "audioPresent": {
+          "const": true,
+          "description": "Whether the demo video itself contains audio; this is not a separate audio asset."
+        }
+      }
+    },
+    "receipt": {
+      "type": "object",
+      "required": ["gateId", "status", "evidence"],
+      "properties": {
+        "gateId": {"type": "string", "minLength": 1, "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+        "status": {"enum": ["PASS", "FAIL", "BLOCKED", "UNSUPPORTED", "NOT_RUN"]},
+        "reason": {"type": "string", "minLength": 1, "pattern": "\\S"},
+        "attemptedAt": {"type": "string", "format": "date-time"},
+        "command": {"type": "string", "minLength": 1, "pattern": "\\S"},
+        "workingDirectory": {"type": "string", "minLength": 1, "pattern": "\\S"},
+        "startedAt": {"type": "string", "format": "date-time"},
+        "endedAt": {"type": "string", "format": "date-time"},
+        "durationMs": {"type": "integer", "minimum": 0},
+        "exitCode": {"type": ["integer", "null"]},
+        "environment": {"type": "object"},
+        "evidence": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/evidence"}
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "PASS"}}, "required": ["status"]},
+          "then": {"properties": {"evidence": {"minItems": 1}}},
+          "else": {"required": ["reason"]}
+        },
+        {
+          "if": {"properties": {"status": {"const": "BLOCKED"}}, "required": ["status"]},
+          "then": {"required": ["attemptedAt"], "properties": {"evidence": {"minItems": 1}}}
+        },
+        {
+          "if": {
+            "properties": {
+              "gateId": {"const": "challenge.public-assets"},
+              "status": {"const": "PASS"}
+            },
+            "required": ["gateId", "status"]
+          },
+          "then": {
+            "required": ["environment"],
+            "properties": {"environment": {"$ref": "#/$defs/challengeEnvironment"}}
+          }
+        }
+      ],
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

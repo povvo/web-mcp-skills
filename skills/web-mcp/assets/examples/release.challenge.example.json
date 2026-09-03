@@ -1,0 +1,73 @@
+{
+  "$schema": "../schemas/release.schema.json",
+  "schemaVersion": "webmcp-release.v1",
+  "release": "challenge",
+  "product": "./product.create-challenge.example.json",
+  "toolset": "./toolset.example.json",
+  "evidence": "./evidence.example.json",
+  "application": {
+    "name": "Acme Analytics",
+    "liveUrl": "https://analytics.example.com/",
+    "sourceRepository": "https://github.com/example/acme-analytics",
+    "license": "./LICENSE",
+    "runInstructions": "./README.md"
+  },
+  "claims": [
+    {
+      "id": "shared-state",
+      "statement": "Human controls and WebMCP tools update the same visible dashboard state.",
+      "evidenceGateIds": [
+        "browser.shared-state",
+        "native.chrome"
+      ]
+    },
+    {
+      "id": "site-tools",
+      "statement": "ChatGPT Site Tools can discover and invoke the application tools.",
+      "evidenceGateIds": [
+        "native.chatgpt"
+      ]
+    }
+  ],
+  "compatibility": [
+    {
+      "target": "chromium-webmcp",
+      "status": "PASS",
+      "evidenceGateIds": [
+        "native.chrome"
+      ]
+    },
+    {
+      "target": "chatgpt-site-tools",
+      "status": "PASS",
+      "evidenceGateIds": [
+        "native.chatgpt"
+      ]
+    },
+    {
+      "target": "service-worker-proposal",
+      "status": "UNSUPPORTED",
+      "evidenceGateIds": [
+        "service-worker.proposal"
+      ]
+    }
+  ],
+  "challenge": {
+    "whyWebMCP": "The agent and person need to inspect and update the same live dashboard rather than exchange detached summaries.",
+    "uxImprovement": "The person can ask for a range change, watch the dashboard update, and continue editing through the existing controls.",
+    "humanAgentCapability": "The agent can inspect plotted provenance, apply a date range, and return the resulting chart revision for human review.",
+    "implementation": "Top-level document tools call the same dashboard actions used by the human controls and return compact JSON evidence.",
+    "liveUrlPublic": true,
+    "sourceRepositoryPublic": true,
+    "repositoryContents": {
+      "sourceCode": true,
+      "assets": true,
+      "runInstructions": true,
+      "openSourceLicense": true
+    },
+    "demoUrl": "https://www.youtube.com/watch?v=example",
+    "demoPublic": true,
+    "demoDurationSeconds": 165,
+    "audioPresent": true
+  }
+}

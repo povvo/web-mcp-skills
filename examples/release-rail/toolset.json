@@ -1,0 +1,37 @@
+{
+  "$schema": "../../skills/web-mcp/assets/schemas/toolset.schema.json",
+  "schemaVersion": "webmcp-toolset.v1",
+  "app": {"name": "Release Rail", "description": "A finite release sequence whose visible controls and WebMCP tools operate one revisioned path."},
+  "tools": [
+    {
+      "name": "inspect_release_rail",
+      "title": "Inspect release rail",
+      "description": "Read the ordered sample release steps, their durable states, the current step, completion count, and revision. Does not modify the rail.",
+      "handler": "inspectReleaseRail",
+      "inputSchema": {"type": "object", "properties": {}, "additionalProperties": false},
+      "annotations": {"readOnlyHint": true, "untrustedContentHint": false},
+      "registration": {"lifetime": "document", "owner": "The Release Rail document.", "exposedTo": []},
+      "semantics": {"effect": "read", "outputTrust": "trusted", "confirmation": "none", "idempotency": "natural", "reversible": true, "preconditions": ["The Release Rail document is active."], "visibleEffect": "No visible state change.", "successEvidence": ["The result contains every step, the current step, completion count, and revision."], "failureModes": ["The operation is cancelled."], "sensitiveInputs": []}
+    },
+    {
+      "name": "advance_release_step",
+      "title": "Advance release step",
+      "description": "Complete the current release step and move the sample rail to its next pending step when the supplied revision is current.",
+      "handler": "advanceReleaseStep",
+      "inputSchema": {"type": "object", "properties": {"expectedRevision": {"type": "integer", "description": "Rail revision observed immediately before advancing.", "minimum": 0}}, "required": ["expectedRevision"], "additionalProperties": false},
+      "annotations": {"readOnlyHint": false, "untrustedContentHint": false},
+      "registration": {"lifetime": "document", "owner": "The Release Rail document.", "exposedTo": []},
+      "semantics": {"effect": "local-write", "outputTrust": "trusted", "confirmation": "none", "idempotency": "none", "reversible": true, "preconditions": ["The Release Rail document is active.", "A current step exists.", "expectedRevision matches the current rail revision."], "visibleEffect": "The current node completes and the next pending node becomes current.", "successEvidence": ["The result names the completed step and next current step.", "The visible path and revision match the result."], "failureModes": ["Every step is already complete.", "The rail revision changed before commit.", "The operation is cancelled."], "sensitiveInputs": []}
+    },
+    {
+      "name": "reopen_release_step",
+      "title": "Reopen release step",
+      "description": "Make one completed step current and return every later step to pending when the supplied revision is current.",
+      "handler": "reopenReleaseStep",
+      "inputSchema": {"type": "object", "properties": {"stepId": {"type": "string", "description": "Identifier of the completed step to reopen.", "enum": ["contract", "tests", "evidence", "publish"]}, "expectedRevision": {"type": "integer", "description": "Rail revision observed immediately before reopening.", "minimum": 0}}, "required": ["stepId", "expectedRevision"], "additionalProperties": false},
+      "annotations": {"readOnlyHint": false, "untrustedContentHint": false},
+      "registration": {"lifetime": "document", "owner": "The Release Rail document.", "exposedTo": []},
+      "semantics": {"effect": "local-write", "outputTrust": "trusted", "confirmation": "none", "idempotency": "natural", "reversible": true, "preconditions": ["The named step exists and is complete.", "expectedRevision matches the current rail revision."], "visibleEffect": "The named step becomes current and every later step becomes pending.", "successEvidence": ["The result names the reopened and affected steps.", "The visible path and revision match the result."], "failureModes": ["The step does not exist or is not complete.", "The rail revision changed before commit.", "The operation is cancelled."], "sensitiveInputs": []}
+    }
+  ]
+}

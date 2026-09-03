@@ -1,0 +1,105 @@
+{
+  "$schema": "../schemas/evidence.schema.json",
+  "schemaVersion": "webmcp-evidence.v1",
+  "candidate": {
+    "productSha256": "be097cfd5929210b22c80f880e2e8c88c928e99ae580076d6a0a58628c5a5afd",
+    "toolsetSha256": "b83b38eacc1f9515efa375273d31eb7543412bc1448aff14b1f55c092b74ffb1",
+    "repositoryRevision": "0123456789abcdef0123456789abcdef01234567",
+    "dirty": false,
+    "generatedAt": "2026-08-28T10:30:00Z"
+  },
+  "profile": {
+    "release": "challenge",
+    "targets": [
+      "chatgpt-site-tools",
+      "chromium-webmcp",
+      "service-worker-proposal"
+    ]
+  },
+  "gates": [
+    {
+      "id": "contract",
+      "status": "PASS",
+      "required": true,
+      "command": "python scripts/webmcp_toolkit.py validate toolset.json --format json",
+      "workingDirectory": ".",
+      "startedAt": "2026-08-28T10:00:00Z",
+      "endedAt": "2026-08-28T10:00:01Z",
+      "durationMs": 1000,
+      "exitCode": 0,
+      "evidence": [
+        {
+          "kind": "receipt",
+          "value": "evidence/contract.json",
+          "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        }
+      ]
+    },
+    {
+      "id": "browser.shared-state",
+      "status": "PASS",
+      "required": true,
+      "evidence": [
+        {
+          "kind": "screenshot",
+          "value": "evidence/shared-state.png"
+        }
+      ]
+    },
+    {
+      "id": "native.chrome",
+      "status": "PASS",
+      "required": true,
+      "evidence": [
+        {
+          "kind": "log",
+          "value": "evidence/chrome-native.json"
+        }
+      ]
+    },
+    {
+      "id": "native.chatgpt",
+      "status": "PASS",
+      "required": true,
+      "evidence": [
+        {
+          "kind": "screenshot",
+          "value": "evidence/chatgpt-site-tools.png"
+        }
+      ]
+    },
+    {
+      "id": "package.clean-install",
+      "status": "PASS",
+      "required": true,
+      "evidence": [
+        {
+          "kind": "receipt",
+          "value": "evidence/clean-install.json"
+        }
+      ]
+    },
+    {
+      "id": "service-worker.proposal",
+      "status": "UNSUPPORTED",
+      "required": false,
+      "reason": "The selected native hosts do not expose the proposed Service Worker WebMCP API.",
+      "evidence": [
+        {
+          "kind": "note",
+          "value": "evidence/service-worker-capability.md"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "status": "PASS",
+    "counts": {
+      "PASS": 5,
+      "FAIL": 0,
+      "BLOCKED": 0,
+      "UNSUPPORTED": 1,
+      "NOT_RUN": 0
+    }
+  }
+}

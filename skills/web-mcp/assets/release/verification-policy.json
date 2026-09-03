@@ -1,0 +1,79 @@
+{
+  "schemaVersion": "webmcp-verification-policy.v1",
+  "statuses": [
+    "PASS",
+    "FAIL",
+    "BLOCKED",
+    "UNSUPPORTED",
+    "NOT_RUN"
+  ],
+  "requiredGatePrecedence": [
+    "FAIL",
+    "BLOCKED",
+    "NOT_RUN",
+    "UNSUPPORTED",
+    "PASS"
+  ],
+  "evidenceClasses": [
+    "deterministic",
+    "source",
+    "wpt",
+    "browser",
+    "agent",
+    "host-native",
+    "dual",
+    "deployment",
+    "package",
+    "challenge",
+    "release"
+  ],
+  "rules": {
+    "missingReceipt": "NOT_RUN",
+    "passRequiresCandidateBinding": true,
+    "passRequiresEvidence": true,
+    "blockedRequiresAttemptAndEvidence": true,
+    "unsupportedRequiresOfficialUrl": true,
+    "deterministicPassMayNotSubstituteForBrowser": true,
+    "browserPassMayNotSubstituteForHostNative": true,
+    "hostNativeChromeAndChatGPTRemainSeparate": true
+  },
+  "sourceFreshnessDays": {
+    "development": 30,
+    "production": 7,
+    "challenge": 1
+  },
+  "challengePublicAssets": {
+    "liveUrlPublic": true,
+    "sourceRepositoryPublic": true,
+    "requiredRepositoryContents": [
+      "sourceCode",
+      "assets",
+      "runInstructions",
+      "openSourceLicense"
+    ],
+    "demoPlatform": "youtube",
+    "demoPublic": true,
+    "demoDurationSecondsExclusiveMaximum": 180,
+    "demoAudioField": "audioPresent",
+    "demoAudioIsSeparateAsset": false
+  },
+  "agentBaseline": {
+    "minimumRuns": 5,
+    "ordinaryMinimumPassRate": 0.8,
+    "releaseAggregateMinimumPassRate": 0.9,
+    "maximumStopViolations": 0
+  },
+  "externalCommands": {
+    "localModel": "npx webmcp-evals local -t schema.json -e evals.json",
+    "deterministicSmoke": "npx webmcp-evals smoke -u <url> -e evals.json -v",
+    "browserModel": "npx webmcp-evals browser -u <url> -e evals.json --open",
+    "wpt": "./wpt run chrome webmcp/ --binary-arg=--enable-features=WebMCP"
+  },
+  "toolingCaveats": [
+    "webmcp-evals smoke mode invokes authored calls and does not prove model selection.",
+    "The current matcher accepts object subsets, so strict JSON Schema validation remains mandatory.",
+    "The current browser evaluator re-queries tools between steps but requires an external timeout and call budget.",
+    "Experimental evaluator output is supplemental evidence rather than a browser conformance oracle.",
+    "For challenge.public-assets, audioPresent describes audio contained in the public YouTube demo video; it is not a separate audio submission."
+  ]
+}

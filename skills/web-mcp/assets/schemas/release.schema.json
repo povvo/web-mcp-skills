@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:webmcp-site-tools:schema:release:v1",
+  "title": "WebMCP production or challenge release manifest",
+  "description": "Binds an application, public claims, compatibility statements, and challenge materials to an executed evidence report.",
+  "type": "object",
+  "required": [
+    "schemaVersion", "release", "product", "toolset", "evidence",
+    "application", "claims", "compatibility"
+  ],
+  "properties": {
+    "$schema": {"type": "string", "minLength": 1},
+    "schemaVersion": {"const": "webmcp-release.v1"},
+    "release": {"enum": ["production", "challenge"]},
+    "product": {"$ref": "#/$defs/path"},
+    "toolset": {"$ref": "#/$defs/path"},
+    "evidence": {"$ref": "#/$defs/path"},
+    "application": {
+      "type": "object",
+      "required": ["name", "liveUrl", "sourceRepository", "license", "runInstructions"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1, "maxLength": 120, "pattern": "\\S"},
+        "liveUrl": {"type": "string", "format": "uri", "pattern": "^https://"},
+        "sourceRepository": {"type": "string", "format": "uri", "pattern": "^https://"},
+        "license": {"$ref": "#/$defs/path"},
+        "runInstructions": {"$ref": "#/$defs/path"}
+      },
+      "additionalProperties": false
+    },
+    "claims": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "statement", "evidenceGateIds"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1, "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+          "statement": {"type": "string", "minLength": 1, "pattern": "\\S"},
+          "evidenceGateIds": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1, "pattern": "^[a-z0-9][a-z0-9._-]*$"}
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "compatibility": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["target", "status", "evidenceGateIds"],
+        "properties": {
+          "target": {
+            "enum": ["webmcp-document", "chatgpt-site-tools", "chromium-webmcp", "mcp", "service-worker-proposal"]
+          },
+          "status": {"enum": ["PASS", "FAIL", "UNSUPPORTED", "NOT_RUN"]},
+          "evidenceGateIds": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1, "pattern": "^[a-z0-9][a-z0-9._-]*$"}
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "challenge": {"$ref": "#/$defs/challenge"}
+  },
+  "$defs": {
+    "path": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "challenge": {
+      "type": "object",
+      "required": [
+        "whyWebMCP", "uxImprovement", "humanAgentCapability", "implementation",
+        "liveUrlPublic", "sourceRepositoryPublic", "repositoryContents",
+        "demoUrl", "demoPublic", "demoDurationSeconds", "audioPresent"
+      ],
+      "properties": {
+        "whyWebMCP": {"type": "string", "minLength": 1, "pattern": "\\S"},
+        "uxImprovement": {"type": "string", "minLength": 1, "pattern": "\\S"},
+        "humanAgentCapability": {"type": "string", "minLength": 1, "pattern": "\\S"},
+        "implementation": {"type": "string", "minLength": 1, "pattern": "\\S"},
+        "liveUrlPublic": {
+          "const": true,
+          "description": "Declares that application.liveUrl is publicly accessible for judging."
+        },
+        "sourceRepositoryPublic": {
+          "const": true,
+          "description": "Declares that application.sourceRepository is publicly accessible."
+        },
+        "repositoryContents": {
+          "type": "object",
+          "description": "Required contents of the public source repository.",
+          "required": ["sourceCode", "assets", "runInstructions", "openSourceLicense"],
+          "properties": {
+            "sourceCode": {"const": true},
+            "assets": {"const": true},
+            "runInstructions": {"const": true},
+            "openSourceLicense": {"const": true}
+          },
+          "additionalProperties": false
+        },
+        "demoUrl": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://(?:www\\.|m\\.)?(?:youtube\\.com/(?:watch\\?|shorts/|live/)|youtu\\.be/)",
+          "description": "Public YouTube URL for the submission demo video."
+        },
+        "demoPublic": {
+          "const": true,
+          "description": "Declares that demoUrl is publicly viewable."
+        },
+        "demoDurationSeconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 179,
+          "description": "Whole-second duration of the demo video; it must be strictly under three minutes."
+        },
+        "audioPresent": {
+          "const": true,
+          "description": "Boolean property of the demo video indicating that the video contains audio; no separate audio asset is required."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"release": {"const": "challenge"}},
+        "required": ["release"]
+      },
+      "then": {"required": ["challenge"]},
+      "else": {"not": {"required": ["challenge"]}}
+    }
+  ],
+  "additionalProperties": false
+}

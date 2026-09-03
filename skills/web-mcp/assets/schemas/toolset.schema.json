@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:webmcp-site-tools:schema:toolset:v1",
+  "title": "WebMCP toolset build manifest",
+  "description": "Authoritative structural contract for repository-grounded WebMCP tool definitions. Cross-field behavioral rules are applied by webmcp_contract.py after this schema passes.",
+  "$comment": "This schema owns shape, required fields, scalar limits, and local value constraints. Behavioral relationships such as effect/annotation agreement, exact-origin validation, required-name membership, and sensitive-field declarations are semantic validation rules.",
+  "type": "object",
+  "required": ["schemaVersion", "app", "tools"],
+  "properties": {
+    "$schema": {"type": "string", "minLength": 1},
+    "schemaVersion": {"const": "webmcp-toolset.v1"},
+    "app": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1, "maxLength": 120, "pattern": "\\S"},
+        "description": {"type": "string", "maxLength": 500, "pattern": "\\S"}
+      },
+      "additionalProperties": false
+    },
+    "tools": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/tool"}
+    }
+  },
+  "$defs": {
+    "nonEmptyStatement": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "inputSchema": {
+      "type": "object",
+      "required": ["type", "properties", "additionalProperties"],
+      "properties": {
+        "type": {"const": "object"},
+        "properties": {
+          "type": "object",
+          "additionalProperties": {"type": "object"}
+        },
+        "required": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1, "pattern": "\\S"},
+          "uniqueItems": true
+        },
+        "additionalProperties": {"const": false}
+      }
+    },
+    "annotations": {
+      "type": "object",
+      "required": ["readOnlyHint", "untrustedContentHint"],
+      "properties": {
+        "readOnlyHint": {"type": "boolean"},
+        "untrustedContentHint": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "registration": {
+      "type": "object",
+      "required": ["lifetime", "exposedTo"],
+      "properties": {
+        "lifetime": {
+          "enum": ["document", "route", "selection", "mode", "permission", "custom"]
+        },
+        "owner": {"type": "string", "maxLength": 300, "pattern": "\\S"},
+        "exposedTo": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1, "pattern": "\\S"},
+          "uniqueItems": true
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"lifetime": {"not": {"const": "document"}}},
+            "required": ["lifetime"]
+          },
+          "then": {"required": ["owner"]}
+        }
+      ],
+      "additionalProperties": false
+    },
+    "sensitiveInput": {
+      "type": "object",
+      "required": ["name", "purpose"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1, "pattern": "\\S"},
+        "purpose": {"type": "string", "minLength": 1, "pattern": "\\S"}
+      },
+      "additionalProperties": false
+    },
+    "semantics": {
+      "type": "object",
+      "required": [
+        "effect", "outputTrust", "confirmation", "idempotency", "reversible",
+        "preconditions", "visibleEffect", "successEvidence", "failureModes", "sensitiveInputs"
+      ],
+      "properties": {
+        "effect": {
+          "enum": [
+            "read", "local-write", "remote-write", "external-communication",
+            "purchase", "permission-change", "destructive"
+          ]
+        },
+        "outputTrust": {"enum": ["trusted", "external", "user-generated", "mixed"]},
+        "confirmation": {"enum": ["none", "required", "site-native"]},
+        "idempotency": {"enum": ["natural", "keyed", "none"]},
+        "reversible": {"type": "boolean"},
+        "preconditions": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/nonEmptyStatement"}
+        },
+        "visibleEffect": {"$ref": "#/$defs/nonEmptyStatement"},
+        "successEvidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/nonEmptyStatement"}
+        },
+        "failureModes": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/nonEmptyStatement"}
+        },
+        "sensitiveInputs": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/sensitiveInput"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "tool": {
+      "type": "object",
+      "required": [
+        "name", "description", "handler", "inputSchema", "annotations", "registration", "semantics"
+      ],
+      "properties": {
+        "name": {
+          "type": "string", "minLength": 1, "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_.-]+$"
+        },
+        "title": {"type": "string", "maxLength": 160, "pattern": "\\S"},
+        "description": {
+          "type": "string", "minLength": 1, "maxLength": 1000, "pattern": "\\S"
+        },
+        "handler": {
+          "type": "string", "minLength": 1, "maxLength": 160,
+          "pattern": "^[A-Za-z_$][A-Za-z0-9_$]*$"
+        },
+        "inputSchema": {"$ref": "#/$defs/inputSchema"},
+        "annotations": {"$ref": "#/$defs/annotations"},
+        "registration": {"$ref": "#/$defs/registration"},
+        "semantics": {"$ref": "#/$defs/semantics"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

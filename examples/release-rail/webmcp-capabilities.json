@@ -1,0 +1,129 @@
+{
+  "canonicalStateOwner": "releaseRailApplication in src/domain.mjs",
+  "capabilities": [
+    {
+      "capability": "inspect-release-rail",
+      "effect": "read",
+      "handler": "inspectReleaseRail",
+      "humanEntrypoint": "Read the ordered path and state summary.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "mcpTool": null,
+      "operation": "inspect-release-rail",
+      "operationModule": "./src/domain.mjs",
+      "operationSource": "new",
+      "resultIdentifiers": [
+        "railId"
+      ],
+      "resultSummary": "Return the rail, ordered steps, current step, completion count, and revision.",
+      "stateReads": [
+        "rail",
+        "steps",
+        "revision"
+      ],
+      "stateWrites": [],
+      "userJourney": "Inspect every step and the current durable release position.",
+      "visibleEffect": "No visible state change.",
+      "webmcpTool": "inspect_release_rail"
+    },
+    {
+      "capability": "advance-release-step",
+      "effect": "local-write",
+      "handler": "advanceReleaseStep",
+      "humanEntrypoint": "Activate Complete current step.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "expectedRevision": {
+            "description": "Rail revision observed immediately before advancing.",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "expectedRevision"
+        ],
+        "type": "object"
+      },
+      "mcpTool": null,
+      "operation": "advance-release-step",
+      "operationModule": "./src/domain.mjs",
+      "operationSource": "new",
+      "resultIdentifiers": [
+        "railId",
+        "completedStepId"
+      ],
+      "resultSummary": "Return the completed step, next current step when present, completion count, and committed revision.",
+      "stateReads": [
+        "steps",
+        "revision"
+      ],
+      "stateWrites": [
+        "steps",
+        "revision",
+        "activity"
+      ],
+      "userJourney": "Complete the current step and move the durable path to the next step.",
+      "visibleEffect": "The current node completes and the next pending node becomes current.",
+      "webmcpTool": "advance_release_step"
+    },
+    {
+      "capability": "reopen-release-step",
+      "effect": "local-write",
+      "handler": "reopenReleaseStep",
+      "humanEntrypoint": "Activate Reopen beside a completed step.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "expectedRevision": {
+            "description": "Rail revision observed immediately before reopening.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "stepId": {
+            "description": "Identifier of the completed step to reopen.",
+            "enum": [
+              "contract",
+              "tests",
+              "evidence",
+              "publish"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "stepId",
+          "expectedRevision"
+        ],
+        "type": "object"
+      },
+      "mcpTool": null,
+      "operation": "reopen-release-step",
+      "operationModule": "./src/domain.mjs",
+      "operationSource": "new",
+      "resultIdentifiers": [
+        "railId",
+        "reopenedStepId"
+      ],
+      "resultSummary": "Return the reopened step, affected later steps, completion count, and committed revision.",
+      "stateReads": [
+        "steps",
+        "revision"
+      ],
+      "stateWrites": [
+        "steps",
+        "revision",
+        "activity"
+      ],
+      "userJourney": "Reopen a completed step and return later steps to pending so the route remains truthful.",
+      "visibleEffect": "The named step becomes current and every later step becomes pending.",
+      "webmcpTool": "reopen_release_step"
+    }
+  ],
+  "productSha256": "e5a79d3df8f01c2d6d6abeb94c0d7e462b82b955d3038f2827c2a499c7e82b0b",
+  "schemaVersion": "webmcp-capability-map.v1",
+  "toolsetSha256": "78a8ab52aba191d6ebdebd1c582b0390622891efd0df6ef1fa7aaef230a2de7b"
+}

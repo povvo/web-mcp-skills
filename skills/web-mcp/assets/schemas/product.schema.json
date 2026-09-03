@@ -1,0 +1,274 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:webmcp-site-tools:schema:product:v1",
+  "title": "WebMCP product build profile",
+  "description": "Binds a human product workflow and canonical application state to real domain operations, WebMCP tools, optional MCP adapters, target hosts, proposal branches, and a release bar.",
+  "type": "object",
+  "required": [
+    "schemaVersion", "mode", "surface", "targets", "release",
+    "applicationRoot", "toolset", "product", "capabilities", "profiles"
+  ],
+  "properties": {
+    "$schema": {"type": "string", "minLength": 1},
+    "schemaVersion": {"const": "webmcp-product.v1"},
+    "mode": {"enum": ["create", "extend"]},
+    "surface": {"enum": ["webmcp", "dual"]},
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"enum": ["webmcp-document", "chatgpt-site-tools", "chromium-webmcp"]}
+    },
+    "release": {"enum": ["development", "production", "challenge"]},
+    "applicationRoot": {"$ref": "#/$defs/path"},
+    "toolset": {"$ref": "#/$defs/path"},
+    "product": {"$ref": "#/$defs/product"},
+    "capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/capability"}
+    },
+    "profiles": {
+      "type": "object",
+      "required": ["document"],
+      "properties": {
+        "document": {
+          "type": "object",
+          "required": ["enabled"],
+          "properties": {"enabled": {"type": "boolean"}},
+          "additionalProperties": false
+        },
+        "declarativeProposal": {
+          "type": "object",
+          "required": ["enabled"],
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "formPaths": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {"$ref": "#/$defs/path"}
+            }
+          },
+          "additionalProperties": false
+        },
+        "serviceWorkerProposal": {"$ref": "#/$defs/serviceWorkerProposal"}
+      },
+      "additionalProperties": false
+    },
+    "mcp": {
+      "type": "object",
+      "required": ["runtime", "transport", "adapterEntrypoint"],
+      "properties": {
+        "runtime": {"enum": ["node", "python", "other"]},
+        "transport": {"enum": ["stdio", "streamable-http", "project-native"]},
+        "adapterEntrypoint": {"$ref": "#/$defs/path"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "nonblank": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_.-]+$"
+    },
+    "path": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "effect": {
+      "enum": [
+        "read", "local-write", "remote-write", "external-communication",
+        "purchase", "permission-change", "destructive"
+      ]
+    },
+    "product": {
+      "type": "object",
+      "required": [
+        "id", "name", "oneSentence", "audience", "sharedArtifact",
+        "humanWorkflow", "state"
+      ],
+      "properties": {
+        "id": {"$ref": "#/$defs/identifier"},
+        "name": {"$ref": "#/$defs/nonblank"},
+        "oneSentence": {"$ref": "#/$defs/nonblank"},
+        "audience": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/nonblank"}
+        },
+        "sharedArtifact": {"$ref": "#/$defs/nonblank"},
+        "humanWorkflow": {
+          "type": "object",
+          "required": ["entrypoint", "operations", "visibleFeedback"],
+          "properties": {
+            "entrypoint": {"$ref": "#/$defs/nonblank"},
+            "operations": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {"$ref": "#/$defs/identifier"}
+            },
+            "visibleFeedback": {"$ref": "#/$defs/nonblank"}
+          },
+          "additionalProperties": false
+        },
+        "state": {
+          "type": "object",
+          "required": ["canonicalOwner", "persistence"],
+          "properties": {
+            "canonicalOwner": {"$ref": "#/$defs/nonblank"},
+            "persistence": {
+              "enum": ["memory", "browser-storage", "application-database", "external-service", "project-native"]
+            },
+            "persistenceLocation": {"$ref": "#/$defs/nonblank"},
+            "revisionField": {"$ref": "#/$defs/identifier"}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "capability": {
+      "type": "object",
+      "required": [
+        "id", "userJourney", "operation", "webmcpTool", "ui", "state",
+        "resultContract", "concurrency", "successEvidence"
+      ],
+      "properties": {
+        "id": {"$ref": "#/$defs/identifier"},
+        "userJourney": {"$ref": "#/$defs/nonblank"},
+        "operation": {
+          "type": "object",
+          "required": ["id", "handler", "module", "source", "effect"],
+          "properties": {
+            "id": {"$ref": "#/$defs/identifier"},
+            "handler": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160,
+              "pattern": "^[A-Za-z_$][A-Za-z0-9_$]*$"
+            },
+            "module": {"$ref": "#/$defs/path"},
+            "source": {"enum": ["existing", "new"]},
+            "effect": {"$ref": "#/$defs/effect"}
+          },
+          "additionalProperties": false
+        },
+        "webmcpTool": {
+          "type": "object",
+          "required": ["name"],
+          "properties": {"name": {"$ref": "#/$defs/identifier"}},
+          "additionalProperties": false
+        },
+        "mcpTool": {
+          "type": "object",
+          "required": ["name", "adapter"],
+          "properties": {
+            "name": {"$ref": "#/$defs/identifier"},
+            "adapter": {"$ref": "#/$defs/path"}
+          },
+          "additionalProperties": false
+        },
+        "ui": {
+          "type": "object",
+          "required": ["humanEntrypoint", "visibleEffect"],
+          "properties": {
+            "humanEntrypoint": {"$ref": "#/$defs/nonblank"},
+            "visibleEffect": {"$ref": "#/$defs/nonblank"}
+          },
+          "additionalProperties": false
+        },
+        "state": {
+          "type": "object",
+          "required": ["reads", "writes"],
+          "properties": {
+            "reads": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {"$ref": "#/$defs/identifier"}
+            },
+            "writes": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {"$ref": "#/$defs/identifier"}
+            }
+          },
+          "additionalProperties": false
+        },
+        "resultContract": {
+          "type": "object",
+          "required": ["summary", "identifiers"],
+          "properties": {
+            "summary": {"$ref": "#/$defs/nonblank"},
+            "identifiers": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {"$ref": "#/$defs/identifier"}
+            },
+            "revisionField": {"$ref": "#/$defs/identifier"}
+          },
+          "additionalProperties": false
+        },
+        "concurrency": {
+          "type": "object",
+          "required": ["strategy"],
+          "properties": {
+            "strategy": {
+              "enum": ["none", "revision", "protected-fields", "semantic-anchor", "partial-acceptance", "custom"]
+            },
+            "expectedRevisionField": {"$ref": "#/$defs/identifier"},
+            "notes": {"$ref": "#/$defs/nonblank"}
+          },
+          "allOf": [
+            {
+              "if": {"properties": {"strategy": {"const": "revision"}}, "required": ["strategy"]},
+              "then": {"required": ["expectedRevisionField"]}
+            }
+          ],
+          "additionalProperties": false
+        },
+        "successEvidence": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/nonblank"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "serviceWorkerProposal": {
+      "type": "object",
+      "required": ["enabled"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "toolNames": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/identifier"}
+        },
+        "stateModel": {"enum": ["stateless", "shared", "session-required"]},
+        "sessionStrategy": {"enum": ["not-required", "application-defined", "host-session-id", "unresolved"]},
+        "scope": {"type": "string", "minLength": 1, "pattern": "^/"},
+        "workerPath": {"$ref": "#/$defs/path"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"enabled": {"const": true}}, "required": ["enabled"]},
+          "then": {"required": ["toolNames", "stateModel", "sessionStrategy", "scope", "workerPath"]}
+        }
+      ],
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"surface": {"const": "dual"}}, "required": ["surface"]},
+      "then": {"required": ["mcp"]},
+      "else": {"not": {"required": ["mcp"]}}
+    }
+  ],
+  "additionalProperties": false
+}

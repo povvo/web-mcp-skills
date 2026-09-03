@@ -1,0 +1,104 @@
+{
+  "$schema": "../../../assets/schemas/toolset.schema.json",
+  "schemaVersion": "webmcp-toolset.v1",
+  "app": {
+    "name": "Dual Shared Board",
+    "description": "WebMCP tools for the page-aware portion of the executable DUAL shared-operation fixture."
+  },
+  "tools": [
+    {
+      "name": "inspect_visible_board",
+      "title": "Inspect visible board",
+      "description": "Read the items and revision shown on the currently open board page without modifying it.",
+      "handler": "inspectBoard",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "annotations": {"readOnlyHint": true, "untrustedContentHint": true},
+      "registration": {
+        "lifetime": "route",
+        "owner": "The open board route.",
+        "exposedTo": []
+      },
+      "semantics": {
+        "effect": "read",
+        "outputTrust": "user-generated",
+        "confirmation": "none",
+        "idempotency": "natural",
+        "reversible": true,
+        "preconditions": ["The board route is active."],
+        "visibleEffect": "No visible state change.",
+        "successEvidence": ["The result contains board identity, items, and revision."],
+        "failureModes": ["The operation is cancelled."],
+        "sensitiveInputs": []
+      }
+    },
+    {
+      "name": "add_visible_board_item",
+      "title": "Add item to visible board",
+      "description": "Commit one titled item through the canonical board operation when the supplied revision is current, then reconcile the open page.",
+      "handler": "addBoardItem",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "title": {"type": "string", "description": "Item title.", "minLength": 1, "maxLength": 80},
+          "expectedRevision": {"type": "integer", "description": "Last observed durable revision.", "minimum": 0}
+        },
+        "required": ["title", "expectedRevision"],
+        "additionalProperties": false
+      },
+      "annotations": {"readOnlyHint": false, "untrustedContentHint": false},
+      "registration": {
+        "lifetime": "route",
+        "owner": "The open board route.",
+        "exposedTo": []
+      },
+      "semantics": {
+        "effect": "remote-write",
+        "outputTrust": "trusted",
+        "confirmation": "none",
+        "idempotency": "none",
+        "reversible": false,
+        "preconditions": ["The board route is active.", "expectedRevision matches the durable board revision."],
+        "visibleEffect": "The visible board reconciles the committed item and durable revision.",
+        "successEvidence": ["The result contains item, durable revision, and commit ID."],
+        "failureModes": ["The title is invalid.", "The revision is stale.", "The operation is cancelled."],
+        "sensitiveInputs": []
+      }
+    },
+    {
+      "name": "select_visible_board_item",
+      "title": "Select visible board item",
+      "description": "Select an existing item in the open board page without changing the durable board record.",
+      "handler": "selectVisibleBoardItem",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "itemId": {"type": "string", "description": "ID of an item visible in the open board.", "minLength": 1, "maxLength": 80}
+        },
+        "required": ["itemId"],
+        "additionalProperties": false
+      },
+      "annotations": {"readOnlyHint": false, "untrustedContentHint": false},
+      "registration": {
+        "lifetime": "route",
+        "owner": "The open board route.",
+        "exposedTo": []
+      },
+      "semantics": {
+        "effect": "local-write",
+        "outputTrust": "trusted",
+        "confirmation": "none",
+        "idempotency": "natural",
+        "reversible": true,
+        "preconditions": ["The board route is active.", "The item is visible."],
+        "visibleEffect": "The matching item becomes the visible page selection without changing durable board state.",
+        "successEvidence": ["The result and visible page identify the same selected item."],
+        "failureModes": ["The item is no longer visible.", "The operation is cancelled."],
+        "sensitiveInputs": []
+      }
+    }
+  ]
+}

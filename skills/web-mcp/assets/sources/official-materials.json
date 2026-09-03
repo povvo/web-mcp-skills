@@ -1,0 +1,161 @@
+{
+  "schemaVersion": "webmcp-source-ledger.v1",
+  "verifiedAt": "2026-08-31",
+  "verificationNote": "Official sources were refreshed on 2026-08-31. webmachinelearning/webmcp main was 41d12f057167ccf5954dbcf49d99502cb6c84491, web-platform-tests/wpt master was 7e755825e0b5c6f631cb862afd5fc451e6825441, webmcp-types latest was 0.1.5, and webmcp-evals latest was 0.0.4. The OpenAI Site tools article and the challenge landing, resources, and governing Devpost rules were also checked. Runtime product support and any later rule change remain candidate-time live-verification items.",
+  "portabilityPolicy": "The portable Skill depends only on its packaged guidance, validation source, and canonical upstream URLs. Workspace research corpora remain build-time evidence and are never runtime paths.",
+  "sources": [
+    {
+      "id": "webmcp-draft-spec",
+      "title": "WebMCP Draft Specification",
+      "authority": "draft-specification",
+      "maturity": "draft-community-group-report",
+      "canonicalUrl": "https://webmachinelearning.github.io/webmcp/",
+      "repositoryUrl": "https://github.com/webmachinelearning/webmcp/blob/main/index.bs",
+      "repositoryRevision": "41d12f057167ccf5954dbcf49d99502cb6c84491",
+      "covers": ["document-model-context", "imperative-api", "in-page-consumers", "origins", "permissions-policy", "lifecycle", "cancellation"],
+      "use": "Primary API contract for the current document-scoped draft. Its security section is informative rather than a separate production host contract.",
+      "liveRefreshRequired": true
+    },
+    {
+      "id": "webmcp-explainer",
+      "title": "WebMCP Explainer",
+      "authority": "official-explainer",
+      "maturity": "design-explainer",
+      "canonicalUrl": "https://github.com/webmachinelearning/webmcp/blob/main/README.md",
+      "repositoryRevision": "41d12f057167ccf5954dbcf49d99502cb6c84491",
+      "covers": ["motivation", "webmcp-versus-mcp", "architecture", "use-cases", "open-issues"],
+      "use": "Architecture and design intent. Do not promote examples or open proposals to normative API behavior.",
+      "liveRefreshRequired": true
+    },
+    {
+      "id": "openai-site-tools",
+      "title": "Using site tools in the ChatGPT desktop app",
+      "authority": "official-product-documentation",
+      "maturity": "current-product-snapshot",
+      "canonicalUrl": "https://help.openai.com/en/articles/20001423-using-site-tools-in-the-chatgpt-desktop-app",
+      "covers": ["chatgpt-site-tools", "host-availability", "supported-api-subset", "user-controls", "limitations"],
+      "use": "Host contract for ChatGPT Site tools. Product names, model availability, workspace availability, iframe support, and declarative support are volatile.",
+      "liveRefreshRequired": true
+    },
+    {
+      "id": "webmcp-implementation-status",
+      "title": "WebMCP Implementation Status",
+      "authority": "official-implementation-snapshot",
+      "maturity": "volatile-status",
+      "canonicalUrl": "https://github.com/webmachinelearning/webmcp/blob/main/implementation-status.md",
+      "repositoryRevision": "41d12f057167ccf5954dbcf49d99502cb6c84491",
+      "covers": ["browser-support", "origin-trials", "host-support"],
+      "use": "Starting point for compatibility research, never timeless support evidence.",
+      "liveRefreshRequired": true
+    },
+    {
+      "id": "webmcp-declarative-explainer",
+      "title": "WebMCP Declarative API Explainer",
+      "authority": "official-proposal",
+      "maturity": "incomplete-proposal",
+      "canonicalUrl": "https://github.com/webmachinelearning/webmcp/blob/main/declarative-api-explainer.md",
+      "repositoryRevision": "41d12f057167ccf5954dbcf49d99502cb6c84491",
+      "covers": ["declarative-forms", "schema-synthesis", "form-response", "proposed-events", "proposed-pseudo-classes"],
+      "use": "Experimental form branch. Central algorithms and integration points remain unresolved; ChatGPT Site tools currently exclude it in the supplied snapshot.",
+      "liveRefreshRequired": true
+    },
+    {
+      "id": "webmcp-service-worker-explainer",
+      "title": "WebMCP for Service Workers",
+      "authority": "official-supplemental-proposal",
+      "maturity": "unstandardized-proposal",
+      "canonicalUrl": "https://github.com/webmachinelearning/webmcp/blob/main/docs/service-workers.md",
+      "repositoryRevision": "41d12f057167ccf5954dbcf49d99502cb6c84491",
+      "covers": ["background-tools", "service-worker-discovery", "jit-installation", "session-routing", "ui-handoff"],
+      "use": "First-class research profile, not the current Window-only document API. Example self.agent/provideContext code is proposal vocabulary rather than current standard IDL.",
+      "liveRefreshRequired": true
+    },
+    {
+      "id": "webmcp-security-questionnaire",
+      "title": "WebMCP Security and Privacy Questionnaire",
+      "authority": "official-design-review",
+      "maturity": "informative-questionnaire",
+      "canonicalUrl": "https://github.com/webmachinelearning/webmcp/blob/main/security-privacy-questionnaire.md",
+      "repositoryRevision": "41d12f057167ccf5954dbcf49d99502cb6c84491",
+      "covers": ["security-model", "privacy-model", "origin-boundaries", "document-lifetime", "known-gaps"],
+      "use": "Threat and design evidence. It does not create APIs that remain open issues in the draft.",
+      "liveRefreshRequired": true
+    },
+    {
+      "id": "webmcp-wpt",
+      "title": "Web Platform Tests for WebMCP",
+      "authority": "cross-browser-conformance-tests",
+      "maturity": "current-test-corpus",
+      "canonicalUrl": "https://github.com/web-platform-tests/wpt/tree/master/webmcp",
+      "repositoryRevision": "7e755825e0b5c6f631cb862afd5fc451e6825441",
+      "covers": ["api-conformance", "registration", "execution", "lifecycle", "declarative-experiments"],
+      "use": "Browser/API conformance evidence. Passing local shims is not a substitute.",
+      "liveRefreshRequired": true
+    },
+    {
+      "id": "webmcp-types",
+      "title": "webmcp-types",
+      "authority": "official-type-package",
+      "maturity": "published-declaration-package",
+      "canonicalUrl": "https://www.npmjs.com/package/webmcp-types",
+      "repositoryUrl": "https://github.com/webmachinelearning/webmcp-types",
+      "verifiedVersion": "0.1.5",
+      "covers": ["typescript-declarations", "document-api"],
+      "use": "Development-time types only; not a runtime implementation, polyfill, serializability check, or Service Worker contract.",
+      "liveRefreshRequired": true
+    },
+    {
+      "id": "chrome-webmcp-evals",
+      "title": "Chrome WebMCP evaluations",
+      "authority": "official-browser-developer-guidance",
+      "maturity": "experimental-tooling",
+      "canonicalUrl": "https://developer.chrome.com/docs/ai/webmcp/evals",
+      "repositoryUrl": "https://github.com/GoogleChromeLabs/webmcp-tools/tree/main/webmcp-evals",
+      "verifiedVersion": "0.0.4",
+      "covers": ["local-evals", "smoke-evals", "browser-evals"],
+      "use": "Supplemental evaluation tooling. Smoke execution and subset matching do not replace strict schemas, application assertions, or host-native evidence.",
+      "liveRefreshRequired": true
+    },
+    {
+      "id": "openai-webmcp-challenge",
+      "title": "OpenAI WebMCP Challenge",
+      "authority": "official-challenge-landing",
+      "maturity": "time-bounded-program",
+      "canonicalUrl": "https://openai.com/webmcp-challenge/",
+      "covers": ["challenge-theme", "program-overview"],
+      "use": "Challenge context. Official rules govern any inconsistency.",
+      "liveRefreshRequired": true
+    },
+    {
+      "id": "openai-webmcp-challenge-rules",
+      "title": "OpenAI WebMCP Challenge Official Rules",
+      "authority": "governing-challenge-rules",
+      "maturity": "time-bounded-rules",
+      "canonicalUrl": "https://webmcp.devpost.com/rules",
+      "resourcesUrl": "https://webmcp.devpost.com/resources",
+      "covers": ["eligibility", "dates", "submission-requirements", "judging", "evidence"],
+      "use": "Controlling source for a CHALLENGE release. Recheck immediately before packaging or submission.",
+      "liveRefreshRequired": true
+    },
+    {
+      "id": "openai-webmcp-showcase",
+      "title": "OpenAI WebMCP Showcase",
+      "authority": "official-product-examples",
+      "maturity": "curated-examples",
+      "canonicalUrl": "https://developers.openai.com/showcase",
+      "covers": ["shared-artifact-patterns", "product-completeness", "tool-topologies", "visible-agent-effects"],
+      "use": "Design evidence, not a normative API or fixed minimum tool count.",
+      "liveRefreshRequired": true
+    },
+    {
+      "id": "mcp-architecture",
+      "title": "Model Context Protocol Architecture",
+      "authority": "official-mcp-documentation",
+      "maturity": "current-protocol-documentation",
+      "canonicalUrl": "https://modelcontextprotocol.io/docs/learn/architecture",
+      "covers": ["mcp-client-server", "page-independent-tools", "host-orchestration"],
+      "use": "Defines the separate MCP surface in DUAL builds. It does not make an MCP server a WebMCP provider.",
+      "liveRefreshRequired": true
+    }
+  ]
+}

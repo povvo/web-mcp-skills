@@ -1,0 +1,12 @@
+{
+  "name": "webmcp-examples",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node serve.mjs",
+    "test": "node --test \"*/test/*.test.mjs\""
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

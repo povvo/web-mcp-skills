@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "webmcp-toolset.v1",
+  "app": {
+    "name": "Contract Fixture"
+  },
+  "tools": [
+    {
+      "name": "inspect_fixture",
+      "title": "Inspect fixture",
+      "description": "Read the current fixture revision and return its stable identifier.",
+      "handler": "inspectFixture",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "untrustedContentHint": false
+      },
+      "registration": {
+        "lifetime": "document",
+        "exposedTo": []
+      },
+      "semantics": {
+        "effect": "read",
+        "outputTrust": "trusted",
+        "confirmation": "none",
+        "idempotency": "natural",
+        "reversible": true,
+        "preconditions": [],
+        "visibleEffect": "No visible state change.",
+        "successEvidence": [
+          "The result contains the fixture ID and revision."
+        ],
+        "failureModes": [
+          "The fixture is unavailable."
+        ],
+        "sensitiveInputs": []
+      }
+    }
+  ]
+}

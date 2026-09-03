@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:webmcp-site-tools:schema:source-refresh:v1",
+  "title": "Candidate-time official source refresh receipts",
+  "type": "object",
+  "required": ["schemaVersion", "sources"],
+  "properties": {
+    "$schema": {"type": "string", "minLength": 1},
+    "schemaVersion": {"const": "webmcp-source-refresh.v1"},
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "canonicalUrl", "status", "checkedAt", "evidence"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1, "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+          "canonicalUrl": {"type": "string", "format": "uri", "pattern": "^https://"},
+          "status": {"enum": ["PASS", "FAIL", "BLOCKED", "UNSUPPORTED", "NOT_RUN"]},
+          "checkedAt": {"type": "string", "format": "date-time"},
+          "reason": {"type": "string", "minLength": 1, "pattern": "\\S"},
+          "evidence": {
+            "type": "array",
+            "items": {"$ref": "#/$defs/evidence"}
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "$defs": {
+    "evidence": {
+      "type": "object",
+      "required": ["kind", "value"],
+      "properties": {
+        "kind": {"enum": ["file", "command", "url", "screenshot", "log", "receipt", "note"]},
+        "value": {"type": "string", "minLength": 1, "pattern": "\\S"},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

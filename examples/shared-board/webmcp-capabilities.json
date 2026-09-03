@@ -1,0 +1,85 @@
+{
+  "canonicalStateOwner": "boardApplication in src/domain.mjs",
+  "capabilities": [
+    {
+      "capability": "inspect-board",
+      "effect": "read",
+      "handler": "inspectBoard",
+      "humanEntrypoint": "Read the board list, count, and revision.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "mcpTool": null,
+      "operation": "inspect-board",
+      "operationModule": "./src/domain.mjs",
+      "operationSource": "new",
+      "resultIdentifiers": [
+        "boardId"
+      ],
+      "resultSummary": "Return board identity, all current items, item count, and revision.",
+      "stateReads": [
+        "board",
+        "items",
+        "revision"
+      ],
+      "stateWrites": [],
+      "userJourney": "Inspect the complete current board before deciding what to add.",
+      "visibleEffect": "No visible state change.",
+      "webmcpTool": "inspect_board"
+    },
+    {
+      "capability": "add-board-item",
+      "effect": "local-write",
+      "handler": "addBoardItem",
+      "humanEntrypoint": "Submit the labelled add-item form.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "expectedRevision": {
+            "description": "Board revision observed immediately before the add operation.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "title": {
+            "description": "Visible title for the new board item.",
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "expectedRevision"
+        ],
+        "type": "object"
+      },
+      "mcpTool": null,
+      "operation": "add-board-item",
+      "operationModule": "./src/domain.mjs",
+      "operationSource": "new",
+      "resultIdentifiers": [
+        "boardId",
+        "itemId"
+      ],
+      "resultSummary": "Return board identity, the added item, item count, and committed revision.",
+      "stateReads": [
+        "board",
+        "items",
+        "revision"
+      ],
+      "stateWrites": [
+        "items",
+        "revision",
+        "activity"
+      ],
+      "userJourney": "Add one item without overwriting a newer human or agent edit.",
+      "visibleEffect": "The board list, count, revision, and activity record display the committed item.",
+      "webmcpTool": "add_board_item"
+    }
+  ],
+  "productSha256": "52e472d43aae06fe9925d55bd56a32a950ac63fc2072f2b24adb82c1c379cc97",
+  "schemaVersion": "webmcp-capability-map.v1",
+  "toolsetSha256": "823aa2d9a91460ad49757e5a4d8d60c55631759ebd7ddb08a539a4b4234873ed"
+}

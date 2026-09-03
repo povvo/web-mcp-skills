@@ -1,0 +1,68 @@
+{
+  "$schema": "../../skills/web-mcp/assets/schemas/product.schema.json",
+  "schemaVersion": "webmcp-product.v1",
+  "mode": "create",
+  "surface": "webmcp",
+  "targets": ["webmcp-document", "chatgpt-site-tools", "chromium-webmcp"],
+  "release": "production",
+  "applicationRoot": ".",
+  "toolset": "./toolset.json",
+  "product": {
+    "id": "evidence-desk",
+    "name": "Evidence Desk",
+    "oneSentence": "Let a person and an agent inspect, select, and annotate the same evidence records without changing their observed status.",
+    "audience": ["Researchers and maintainers reviewing evidence with an agent"],
+    "sharedArtifact": "A selected sample evidence record and revisioned annotations persisted in browser storage.",
+    "humanWorkflow": {
+      "entrypoint": "Select a record, inspect its evidence state, then attach a factual annotation.",
+      "operations": ["inspect-evidence-desk", "select-evidence-record", "annotate-evidence-record"],
+      "visibleFeedback": "The selected detail region, annotations, revision, and activity record update from the canonical desk store."
+    },
+    "state": {
+      "canonicalOwner": "evidenceDeskApplication in src/domain.mjs",
+      "persistence": "browser-storage",
+      "persistenceLocation": "localStorage key webmcp.examples.evidence-desk.v1",
+      "revisionField": "revision"
+    }
+  },
+  "capabilities": [
+    {
+      "id": "inspect-evidence-desk",
+      "userJourney": "Inspect all sample records, their evidence states, the selected record, annotations, and revision.",
+      "operation": {"id": "inspect-evidence-desk", "handler": "inspectEvidenceDesk", "module": "./src/domain.mjs", "source": "new", "effect": "read"},
+      "webmcpTool": {"name": "inspect_evidence_desk"},
+      "ui": {"humanEntrypoint": "Read the record index and selected detail.", "visibleEffect": "No visible state change."},
+      "state": {"reads": ["records", "selection", "annotations", "revision"], "writes": []},
+      "resultContract": {"summary": "Return all evidence records, the selected record, annotations, and revision.", "identifiers": ["deskId"], "revisionField": "revision"},
+      "concurrency": {"strategy": "none"},
+      "successEvidence": ["The returned selected record and revision match the visible desk."]
+    },
+    {
+      "id": "select-evidence-record",
+      "userJourney": "Make one named evidence record the shared visible selection.",
+      "operation": {"id": "select-evidence-record", "handler": "selectEvidenceRecord", "module": "./src/domain.mjs", "source": "new", "effect": "local-write"},
+      "webmcpTool": {"name": "select_evidence_record"},
+      "ui": {"humanEntrypoint": "Activate a record in the evidence index.", "visibleEffect": "The bounded detail region displays the selected record and its unchanged evidence state."},
+      "state": {"reads": ["records", "selection", "revision"], "writes": ["selection", "revision", "activity"]},
+      "resultContract": {"summary": "Return the selected record identity, unchanged evidence state, and committed revision.", "identifiers": ["deskId", "recordId"], "revisionField": "revision"},
+      "concurrency": {"strategy": "revision", "expectedRevisionField": "expectedRevision"},
+      "successEvidence": ["The returned record is the visibly selected record.", "Its evidence state is unchanged."]
+    },
+    {
+      "id": "annotate-evidence-record",
+      "userJourney": "Attach one factual note to a named record without promoting or resolving its evidence state.",
+      "operation": {"id": "annotate-evidence-record", "handler": "annotateEvidenceRecord", "module": "./src/domain.mjs", "source": "new", "effect": "local-write"},
+      "webmcpTool": {"name": "annotate_evidence_record"},
+      "ui": {"humanEntrypoint": "Submit the labelled annotation form for the selected record.", "visibleEffect": "The note appears under the selected record and the revision advances; the record status does not change."},
+      "state": {"reads": ["records", "annotations", "revision"], "writes": ["annotations", "revision", "activity"]},
+      "resultContract": {"summary": "Return the record identity, saved annotation, unchanged evidence state, annotation count, and committed revision.", "identifiers": ["deskId", "recordId", "annotationId"], "revisionField": "revision"},
+      "concurrency": {"strategy": "revision", "expectedRevisionField": "expectedRevision"},
+      "successEvidence": ["The returned annotation appears under the named record.", "The record evidence state remains unchanged at the returned revision."]
+    }
+  ],
+  "profiles": {
+    "document": {"enabled": true},
+    "declarativeProposal": {"enabled": false},
+    "serviceWorkerProposal": {"enabled": false}
+  }
+}

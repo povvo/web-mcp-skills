@@ -1,0 +1,131 @@
+{
+  "$schema": "../schemas/product.schema.json",
+  "schemaVersion": "webmcp-product.v1",
+  "mode": "extend",
+  "surface": "dual",
+  "targets": [
+    "webmcp-document",
+    "chromium-webmcp"
+  ],
+  "release": "production",
+  "applicationRoot": ".",
+  "toolset": "./toolset.example.json",
+  "product": {
+    "id": "acme-analytics",
+    "name": "Acme Analytics",
+    "oneSentence": "Extend the shared analytics dashboard with WebMCP and MCP adapters over its existing domain operations.",
+    "audience": [
+      "Analysts working in the open dashboard",
+      "Automation clients using the same authorized analytics operations"
+    ],
+    "sharedArtifact": "The analytics dashboard, its selected range, plotted series, and revisioned state.",
+    "humanWorkflow": {
+      "entrypoint": "Open the existing analytics dashboard route.",
+      "operations": [
+        "inspect-dashboard-series",
+        "set-dashboard-date-range"
+      ],
+      "visibleFeedback": "The dashboard controls and chart remain the authoritative human surface for changes made through either adapter."
+    },
+    "state": {
+      "canonicalOwner": "The existing dashboard domain service shared by UI, WebMCP, and MCP adapters.",
+      "persistence": "application-database",
+      "persistenceLocation": "The existing analytics data service and dashboard preference store.",
+      "revisionField": "revision"
+    }
+  },
+  "capabilities": [
+    {
+      "id": "inspect-dashboard-series",
+      "userJourney": "Inspect the exact values and provenance behind a plotted dashboard series.",
+      "operation": {
+        "id": "inspect-dashboard-series",
+        "handler": "inspectDashboardSeries",
+        "module": "./src/dashboard/operations.ts",
+        "source": "existing",
+        "effect": "read"
+      },
+      "webmcpTool": {
+        "name": "inspect_dashboard_series"
+      },
+      "mcpTool": {
+        "name": "inspect_dashboard_series",
+        "adapter": "./src/mcp/adapters/inspect-dashboard-series.ts"
+      },
+      "ui": {
+        "humanEntrypoint": "Choose a plotted series and open its details.",
+        "visibleEffect": "No visible state change."
+      },
+      "state": {
+        "reads": ["dashboard", "series", "revision", "source-provenance"],
+        "writes": []
+      },
+      "resultContract": {
+        "summary": "Return dashboard and series identity, bounded chart points, source identifiers, and revision.",
+        "identifiers": ["dashboardId", "seriesId"],
+        "revisionField": "revision"
+      },
+      "concurrency": {
+        "strategy": "none"
+      },
+      "successEvidence": [
+        "WebMCP and MCP return the same result shape for the same authorized operation input."
+      ]
+    },
+    {
+      "id": "set-dashboard-date-range",
+      "userJourney": "Apply a reporting range through either surface and review the refreshed shared dashboard.",
+      "operation": {
+        "id": "set-dashboard-date-range",
+        "handler": "setDashboardDateRange",
+        "module": "./src/dashboard/operations.ts",
+        "source": "existing",
+        "effect": "local-write"
+      },
+      "webmcpTool": {
+        "name": "set_dashboard_date_range"
+      },
+      "mcpTool": {
+        "name": "set_dashboard_date_range",
+        "adapter": "./src/mcp/adapters/set-dashboard-date-range.ts"
+      },
+      "ui": {
+        "humanEntrypoint": "Set the start and end dates in the dashboard controls.",
+        "visibleEffect": "The dashboard date controls and charts update to the applied range."
+      },
+      "state": {
+        "reads": ["dashboard", "date-range", "revision"],
+        "writes": ["date-range", "chart-data", "revision"]
+      },
+      "resultContract": {
+        "summary": "Return the applied dates, dashboard identity, and resulting chart revision.",
+        "identifiers": ["dashboardId", "startDate", "endDate"],
+        "revisionField": "revision"
+      },
+      "concurrency": {
+        "strategy": "none",
+        "notes": "The domain action is idempotent and owns its application-defined last-write-wins policy."
+      },
+      "successEvidence": [
+        "Both adapters update the same canonical state and produce the same resulting revision.",
+        "The visible dashboard reflects the returned range when its route is open."
+      ]
+    }
+  ],
+  "profiles": {
+    "document": {
+      "enabled": true
+    },
+    "declarativeProposal": {
+      "enabled": false
+    },
+    "serviceWorkerProposal": {
+      "enabled": false
+    }
+  },
+  "mcp": {
+    "runtime": "node",
+    "transport": "stdio",
+    "adapterEntrypoint": "./src/mcp/server.ts"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "./verification-receipts.schema.json",
+  "schemaVersion": "webmcp-verification-receipts.v1",
+  "candidate": {
+    "productSha256": "3f2504d5a6d36643206597eb9bf317fa2db4d60e29958b5592f092e3e64e6101",
+    "toolsetSha256": "b83b38eacc1f9515efa375273d31eb7543412bc1448aff14b1f55c092b74ffb1"
+  },
+  "receipts": [
+    {
+      "gateId": "native.chatgpt",
+      "status": "NOT_RUN",
+      "reason": "Replace this template state only after a native ChatGPT Site Tools run.",
+      "environment": {},
+      "evidence": []
+    }
+  ]
+}

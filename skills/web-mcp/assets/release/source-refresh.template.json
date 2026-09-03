@@ -1,0 +1,5 @@
+{
+  "$schema": "./source-refresh.schema.json",
+  "schemaVersion": "webmcp-source-refresh.v1",
+  "sources": []
+}

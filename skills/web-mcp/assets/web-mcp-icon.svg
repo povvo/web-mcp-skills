@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 256 256"
+     width="256"
+     height="256"
+     role="img"
+     aria-labelledby="title description"
+     shape-rendering="geometricPrecision">
+  <title id="title">web-mcp Skill icon</title>
+  <desc id="description">An original three-node route entering a shared application state.</desc>
+  <metadata id="web-mcp-asset-tokens">
+    surface.canvas=#0A0A0A; icon.default=#F7F7F2
+  </metadata>
+  <style>
+    .route,
+    .node-open {
+      fill: none;
+      stroke: #f7f7f2;
+      stroke-width: 20;
+      stroke-linecap: square;
+      stroke-linejoin: round;
+    }
+
+    .node-open {
+      fill: #0a0a0a;
+      stroke-width: 18;
+    }
+
+    .node-current {
+      fill: #f7f7f2;
+    }
+  </style>
+
+  <rect width="256" height="256" fill="#0a0a0a"/>
+  <path class="route" d="M48 184H96L152 128V72H208"/>
+  <circle class="node-open" cx="48" cy="184" r="20"/>
+  <circle class="node-current" cx="152" cy="128" r="18"/>
+  <circle class="node-open" cx="208" cy="72" r="20"/>
+</svg>

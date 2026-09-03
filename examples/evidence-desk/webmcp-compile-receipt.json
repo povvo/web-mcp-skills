@@ -1,0 +1,63 @@
+{
+  "artifacts": {
+    "adapter": "webmcp-tools.js",
+    "capabilityMap": "webmcp-capabilities.json",
+    "plan": "webmcp-build-plan.json"
+  },
+  "compilerVersion": "3.0.0",
+  "handlerReadiness": {
+    "blockers": [],
+    "handlerMappings": [
+      {
+        "handler": "inspectEvidenceDesk",
+        "matches": [
+          {
+            "line": 73,
+            "name": "inspectEvidenceDesk",
+            "path": "src/domain.mjs",
+            "visibility": "exported"
+          }
+        ],
+        "resolved": true,
+        "tool": "inspect_evidence_desk"
+      },
+      {
+        "handler": "selectEvidenceRecord",
+        "matches": [
+          {
+            "line": 74,
+            "name": "selectEvidenceRecord",
+            "path": "src/domain.mjs",
+            "visibility": "exported"
+          }
+        ],
+        "resolved": true,
+        "tool": "select_evidence_record"
+      },
+      {
+        "handler": "annotateEvidenceRecord",
+        "matches": [
+          {
+            "line": 75,
+            "name": "annotateEvidenceRecord",
+            "path": "src/domain.mjs",
+            "visibility": "exported"
+          }
+        ],
+        "resolved": true,
+        "tool": "annotate_evidence_record"
+      }
+    ],
+    "repository": "C:\\Users\\Ethan\\Documents\\ChatGPT\\webmcp\\examples\\evidence-desk",
+    "repositorySha256": "2c85bb6c9cf719ba47423dd784a47094e59fd754742c12c81fcc1e5cc607b42f",
+    "status": "PASS",
+    "target": "vanilla-js",
+    "warnings": []
+  },
+  "nativeHostEvidence": "NOT_RUN",
+  "productSha256": "ff10770c8e8391c37cbabd9ea7c4851e7be294421b1bbcd14d0d859821b5246e",
+  "schemaVersion": "webmcp-compile-receipt.v1",
+  "status": "PASS",
+  "target": "vanilla-js",
+  "toolsetSha256": "e433661cdf93fbaf62b6327036fe0a3ec9a7e77962ffb46992e88df8c6539445"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "web-mcp",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node .github/scripts/validate-skill.mjs skills && npm --prefix examples test && node .github/scripts/validate-examples.mjs && node .github/scripts/validate-doc-links.mjs",
+    "test:examples": "npm --prefix examples test && node .github/scripts/validate-examples.mjs",
+    "test:docs": "node .github/scripts/validate-doc-links.mjs",
+    "test:skill": "python -B skills/web-mcp/scripts/webmcp_toolkit.py self-test --profile full --format text"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

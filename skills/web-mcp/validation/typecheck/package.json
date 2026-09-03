@@ -1,0 +1,23 @@
+{
+  "name": "webmcp-generated-adapter-typecheck",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Isolated, locked compiler matrix for generated WebMCP adapters.",
+  "engines": {
+    "node": ">=24"
+  },
+  "devDependencies": {
+    "@angular/compiler-cli": "22.1.4",
+    "@angular/core": "22.1.4",
+    "@types/react": "19.2.18",
+    "next": "16.3.3",
+    "react": "19.2.8",
+    "svelte": "5.56.10",
+    "typescript": "6.0.3",
+    "vue": "3.5.42",
+    "webmcp-types": "0.1.5"
+  },
+  "scripts": {
+    "test": "node --test ../node/typecheck.test.mjs"
+  }
+}

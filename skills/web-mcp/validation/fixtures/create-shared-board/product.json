@@ -1,0 +1,96 @@
+{
+  "$schema": "../../../assets/schemas/product.schema.json",
+  "schemaVersion": "webmcp-product.v1",
+  "mode": "create",
+  "surface": "webmcp",
+  "targets": ["webmcp-document"],
+  "release": "development",
+  "applicationRoot": ".",
+  "toolset": "./toolset.json",
+  "product": {
+    "id": "shared-board-fixture",
+    "name": "Shared Board",
+    "oneSentence": "Let a person and an agent inspect and add items to the same revisioned board.",
+    "audience": ["Teams working with an agent in an open page"],
+    "sharedArtifact": "A visible revisioned board persisted in browser storage.",
+    "humanWorkflow": {
+      "entrypoint": "Open the board and use the add-item form.",
+      "operations": ["inspect-board", "add-board-item"],
+      "visibleFeedback": "The item list, item count, revision, activity message, and conflict state update from the canonical board store."
+    },
+    "state": {
+      "canonicalOwner": "boardApplication in src/domain.mjs",
+      "persistence": "browser-storage",
+      "persistenceLocation": "localStorage key webmcp.shared-board.v1",
+      "revisionField": "revision"
+    }
+  },
+  "capabilities": [
+    {
+      "id": "inspect-board",
+      "userJourney": "Inspect the complete current board before deciding what to add.",
+      "operation": {
+        "id": "inspect-board",
+        "handler": "inspectBoard",
+        "module": "./src/domain.mjs",
+        "source": "new",
+        "effect": "read"
+      },
+      "webmcpTool": {"name": "inspect_board"},
+      "ui": {
+        "humanEntrypoint": "Read the board list, count, and revision.",
+        "visibleEffect": "No visible state change."
+      },
+      "state": {
+        "reads": ["board", "items", "revision"],
+        "writes": []
+      },
+      "resultContract": {
+        "summary": "Return board identity, all current items, item count, and revision.",
+        "identifiers": ["boardId"],
+        "revisionField": "revision"
+      },
+      "concurrency": {"strategy": "none"},
+      "successEvidence": ["The returned item count and revision match the visible board."
+      ]
+    },
+    {
+      "id": "add-board-item",
+      "userJourney": "Add one item to the board without overwriting a newer human or agent edit.",
+      "operation": {
+        "id": "add-board-item",
+        "handler": "addBoardItem",
+        "module": "./src/domain.mjs",
+        "source": "new",
+        "effect": "local-write"
+      },
+      "webmcpTool": {"name": "add_board_item"},
+      "ui": {
+        "humanEntrypoint": "Submit the visible add-item form.",
+        "visibleEffect": "The board list, item count, revision, and activity message display the committed item."
+      },
+      "state": {
+        "reads": ["board", "items", "revision"],
+        "writes": ["items", "revision", "activity"]
+      },
+      "resultContract": {
+        "summary": "Return board identity, the added item, resulting item count, and committed revision.",
+        "identifiers": ["boardId", "itemId"],
+        "revisionField": "revision"
+      },
+      "concurrency": {
+        "strategy": "revision",
+        "expectedRevisionField": "expectedRevision"
+      },
+      "successEvidence": [
+        "The returned item appears in the visible list.",
+        "The returned revision matches the visible revision."
+      ]
+    }
+  ],
+  "profiles": {
+    "document": {"enabled": true},
+    "declarativeProposal": {"enabled": false},
+    "serviceWorkerProposal": {"enabled": false}
+  }
+}

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="An evidence desk with human controls and WebMCP tools over the same explicit evidence states.">
+    <title>Evidence Desk · WebMCP example</title>
+    <link rel="stylesheet" href="../_shared/web-mcp-design.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#workspace">Skip to evidence desk</a>
+    <header class="site-header">
+      <a class="brand" href="../"><span class="brand-mark" aria-hidden="true"></span>WEB MCP</a>
+      <nav class="site-nav" aria-label="Examples"><a href="../shared-board/">Shared Board</a><a href="../release-rail/">Release Rail</a><a aria-current="page" href="./">Evidence Desk</a></nav>
+    </header>
+    <main class="shell" id="workspace">
+      <section class="hero" aria-labelledby="page-title">
+        <div><p class="eyebrow">Example 03 · selected record</p><h1 id="page-title">Evidence Desk</h1><p class="lede">Observed, prepared, and blocked are different states. An annotation can describe one. It cannot quietly promote it.</p></div>
+        <aside class="hero-note"><p class="meta-label">Site tools</p><p id="runtime-state" class="state-node">Checking WebMCP support</p></aside>
+      </section>
+      <section class="instrument" aria-label="Evidence desk instrument">
+        <section class="control-panel" aria-labelledby="index-title">
+          <div class="section-head"><h2 id="index-title">Evidence index</h2><span class="sample-label">Sample records</span></div>
+          <ul class="records" id="evidence-records" aria-label="Evidence records"></ul>
+          <form id="annotation-form">
+            <div class="field"><label for="annotation-note">Factual annotation</label><textarea id="annotation-note" name="note" required maxlength="280" aria-describedby="annotation-help"></textarea><p class="help" id="annotation-help">1–280 characters. The record state will not change.</p></div>
+            <div class="actions"><button class="button button-primary" type="submit">Save record annotation</button></div>
+          </form>
+          <p class="status" id="activity" role="status">Evidence desk ready.</p>
+        </section>
+        <section class="signal-panel" aria-labelledby="detail-title">
+          <div class="section-head"><h2 id="detail-title">Selected record</h2><span class="state-node" data-state="current">Inspected</span></div>
+          <div class="stats" aria-label="Selected record facts"><div class="stat"><strong id="selected-id">wpt</strong><span>Record ID</span></div><div class="stat"><strong id="annotation-count">0</strong><span>Annotations</span></div><div class="stat"><strong id="revision">0</strong><span>Revision</span></div></div>
+          <div class="detail" id="selected-detail"></div>
+        </section>
+      </section>
+    </main>
+    <footer class="page-footer"><span>Tools: inspect_evidence_desk · select_evidence_record · annotate_evidence_record</span><a href="../../docs/examples.md#evidence-desk">Read the example notes</a></footer>
+    <noscript><p class="noscript">JavaScript is required for the shared state and WebMCP registration.</p></noscript>
+    <script type="module" src="./src/ui.mjs"></script>
+  </body>
+</html>

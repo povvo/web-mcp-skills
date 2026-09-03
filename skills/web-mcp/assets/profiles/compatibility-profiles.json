@@ -1,0 +1,92 @@
+{
+  "schemaVersion": "webmcp-compatibility-profiles.v1",
+  "verifiedAt": "2026-08-28",
+  "sourceLedger": "../sources/official-materials.json",
+  "checkStatuses": ["PASS", "WARN", "FAIL", "UNSUPPORTED", "NOT_RUN"],
+  "statusDisplay": {"NOT_RUN": "NOT RUN"},
+  "profiles": [
+    {
+      "id": "webmcp-document",
+      "label": "Document WebMCP draft",
+      "kind": "web-platform-draft",
+      "maturity": "current-draft-api",
+      "defaultFor": ["general-webmcp", "in-page-agent", "cross-origin-research"],
+      "publisherRealm": "Window Document",
+      "requiredSurface": ["document.modelContext", "registerTool"],
+      "supportedBranches": ["imperative", "dynamic-registration", "registration-abort", "execution-abort", "json-serialized-results"],
+      "conditionalBranches": ["getTools", "executeTool", "cross-origin-frames", "permissions-policy"],
+      "excludedBranches": ["service-worker-global-registration"],
+      "claimPolicy": "Describe it as the current WebMCP draft, not a W3C Recommendation or universal browser feature.",
+      "requiredEvidence": ["contract-validation", "handler-tests", "lifecycle-tests", "target-browser-discovery", "target-browser-invocation"]
+    },
+    {
+      "id": "chatgpt-site-tools",
+      "label": "ChatGPT Site tools",
+      "kind": "product-host",
+      "maturity": "current-product-subset",
+      "defaultFor": ["chatgpt-work", "codex-built-in-browser", "openai-webmcp-challenge"],
+      "publisherRealm": "top-level Window Document",
+      "requiredSurface": ["document.modelContext", "registerTool", "top-level-imperative-tools"],
+      "supportedBranches": ["imperative", "page-bound-tools", "signed-in-page-session", "site-tools-user-controls"],
+      "conditionalBranches": ["model-availability", "workspace-availability", "rollout", "browser-version"],
+      "excludedBranches": ["declarative-forms-in-supplied-snapshot", "iframe-tool-discovery-in-supplied-snapshot", "service-worker-tools"],
+      "claimPolicy": "Refresh the official product documentation before naming supported models, workspaces, declarative behavior, iframe behavior, or rollout. A document-draft pass is not a ChatGPT-host pass.",
+      "requiredEvidence": ["top-level-imperative-registration", "available-site-tools-receipt", "native-tool-invocation", "visible-page-effect", "recently-used-or-source-receipt"]
+    },
+    {
+      "id": "chromium-webmcp",
+      "label": "Chromium WebMCP implementation",
+      "kind": "browser-implementation",
+      "maturity": "experimental-browser-profile",
+      "defaultFor": ["chrome-development", "chrome-origin-trial", "browser-evaluations"],
+      "publisherRealm": "Window Document",
+      "requiredSurface": ["document.modelContext", "registerTool"],
+      "supportedBranches": ["imperative", "browser-devtools-inspection"],
+      "conditionalBranches": ["origin-trial", "testing-flag", "browser-version", "declarative-experiment", "iframe-behavior"],
+      "excludedBranches": ["service-worker-tools-without-independent-implementation-evidence"],
+      "claimPolicy": "Record the exact browser build, flags or origin-trial state, observed schema, and invocation receipt. Refresh current Chrome guidance before use.",
+      "requiredEvidence": ["browser-version", "feature-or-trial-state", "tool-discovery", "manual-invocation", "chrome-eval-result", "visible-page-effect"]
+    },
+    {
+      "id": "webmcp-declarative",
+      "label": "Declarative WebMCP proposal",
+      "kind": "experimental-api-branch",
+      "maturity": "incomplete-proposal",
+      "defaultFor": ["semantic-form-experiment"],
+      "publisherRealm": "HTML form in a target implementation",
+      "requiredSurface": ["toolname", "tooldescription", "verified-target-form-processing"],
+      "supportedBranches": ["proposal-form-attributes", "proposal-schema-synthesis", "normal-form-fallback"],
+      "conditionalBranches": ["toolautosubmit", "toolparamdescription", "respondWith", "proposed-events", "proposed-pseudo-classes"],
+      "excludedBranches": ["chatgpt-site-tools-in-supplied-snapshot", "portable-production-conformance-claim"],
+      "claimPolicy": "Label generated code and tests experimental and target-specific. Inspect the browser-produced schema and never copy proposal examples with invalid tool-name grammar.",
+      "requiredEvidence": ["exact-target-version", "observed-synthesized-schema", "human-form-fallback", "activation-fill-submit-cancel-tests"]
+    },
+    {
+      "id": "webmcp-service-worker",
+      "label": "Service Worker WebMCP proposal",
+      "kind": "research-api-branch",
+      "maturity": "unstandardized-proposal",
+      "defaultFor": ["background-webmcp-research"],
+      "publisherRealm": "proposed ServiceWorkerGlobalScope integration",
+      "requiredSurface": [],
+      "supportedBranches": ["proposal-background-motivation", "proposal-ui-handoff", "proposal-session-routing-analysis"],
+      "conditionalBranches": ["discovery", "jit-installation", "manifest-linkage", "session-identifier", "multi-client-routing"],
+      "excludedBranches": ["current-document-idl", "current-webmcp-types", "chatgpt-site-tools", "production-portability-claim"],
+      "claimPolicy": "Treat self.agent/provideContext and related examples as proposal vocabulary or pseudocode unless a named target independently implements them. Do not substitute MCP terminology for missing WebMCP implementation evidence.",
+      "requiredEvidence": ["proposal-source-citation", "named-target-implementation-evidence", "background-routing-tests", "ui-handoff-tests", "unsupported-gaps-record"]
+    }
+  ],
+  "surfaces": [
+    {
+      "id": "WEBMCP",
+      "definition": "Genuine page-bound or explicitly selected experimental WebMCP capability.",
+      "requires": ["at-least-one-webmcp-profile", "real-application-operation", "visible-or-durable-effect-evidence"]
+    },
+    {
+      "id": "DUAL",
+      "definition": "A genuine WebMCP surface plus an independently useful MCP adapter over the same domain or backend contract.",
+      "requires": ["at-least-one-webmcp-profile", "mcp-architecture", "surface-separation", "independent-tests", "host-composition-test"],
+      "forbids": ["claiming-webmcp-automatically-calls-mcp", "using-mcp-as-a-substitute-for-webmcp"]
+    }
+  ]
+}

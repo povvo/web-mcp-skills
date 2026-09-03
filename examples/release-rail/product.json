@@ -1,0 +1,68 @@
+{
+  "$schema": "../../skills/web-mcp/assets/schemas/product.schema.json",
+  "schemaVersion": "webmcp-product.v1",
+  "mode": "create",
+  "surface": "webmcp",
+  "targets": ["webmcp-document", "chatgpt-site-tools", "chromium-webmcp"],
+  "release": "production",
+  "applicationRoot": ".",
+  "toolset": "./toolset.json",
+  "product": {
+    "id": "release-rail",
+    "name": "Release Rail",
+    "oneSentence": "Let a person and an agent inspect and operate the same ordered release sequence.",
+    "audience": ["Maintainers coordinating finite release work with an agent"],
+    "sharedArtifact": "A four-step sample release rail with explicit pending, current, and complete states.",
+    "humanWorkflow": {
+      "entrypoint": "Open the rail, inspect the current step, then advance or reopen a named step.",
+      "operations": ["inspect-release-rail", "advance-release-step", "reopen-release-step"],
+      "visibleFeedback": "The path, current step, completion count, revision, and activity record update from the canonical rail store."
+    },
+    "state": {
+      "canonicalOwner": "releaseRailApplication in src/domain.mjs",
+      "persistence": "browser-storage",
+      "persistenceLocation": "localStorage key webmcp.examples.release-rail.v1",
+      "revisionField": "revision"
+    }
+  },
+  "capabilities": [
+    {
+      "id": "inspect-release-rail",
+      "userJourney": "Inspect every step and the current durable release position.",
+      "operation": {"id": "inspect-release-rail", "handler": "inspectReleaseRail", "module": "./src/domain.mjs", "source": "new", "effect": "read"},
+      "webmcpTool": {"name": "inspect_release_rail"},
+      "ui": {"humanEntrypoint": "Read the ordered path and state summary.", "visibleEffect": "No visible state change."},
+      "state": {"reads": ["rail", "steps", "revision"], "writes": []},
+      "resultContract": {"summary": "Return the rail, ordered steps, current step, completion count, and revision.", "identifiers": ["railId"], "revisionField": "revision"},
+      "concurrency": {"strategy": "none"},
+      "successEvidence": ["The returned path and revision match the visible rail."]
+    },
+    {
+      "id": "advance-release-step",
+      "userJourney": "Complete the current step and move the durable path to the next step.",
+      "operation": {"id": "advance-release-step", "handler": "advanceReleaseStep", "module": "./src/domain.mjs", "source": "new", "effect": "local-write"},
+      "webmcpTool": {"name": "advance_release_step"},
+      "ui": {"humanEntrypoint": "Activate Complete current step.", "visibleEffect": "The current node completes and the next pending node becomes current."},
+      "state": {"reads": ["steps", "revision"], "writes": ["steps", "revision", "activity"]},
+      "resultContract": {"summary": "Return the completed step, next current step when present, completion count, and committed revision.", "identifiers": ["railId", "completedStepId"], "revisionField": "revision"},
+      "concurrency": {"strategy": "revision", "expectedRevisionField": "expectedRevision"},
+      "successEvidence": ["The completed and next-current nodes match the returned result.", "The visible revision matches the returned revision."]
+    },
+    {
+      "id": "reopen-release-step",
+      "userJourney": "Reopen a completed step and return later steps to pending so the route remains truthful.",
+      "operation": {"id": "reopen-release-step", "handler": "reopenReleaseStep", "module": "./src/domain.mjs", "source": "new", "effect": "local-write"},
+      "webmcpTool": {"name": "reopen_release_step"},
+      "ui": {"humanEntrypoint": "Activate Reopen beside a completed step.", "visibleEffect": "The named step becomes current and every later step becomes pending."},
+      "state": {"reads": ["steps", "revision"], "writes": ["steps", "revision", "activity"]},
+      "resultContract": {"summary": "Return the reopened step, affected later steps, completion count, and committed revision.", "identifiers": ["railId", "reopenedStepId"], "revisionField": "revision"},
+      "concurrency": {"strategy": "revision", "expectedRevisionField": "expectedRevision"},
+      "successEvidence": ["The reopened step is visibly current.", "Later steps are visibly pending at the returned revision."]
+    }
+  ],
+  "profiles": {
+    "document": {"enabled": true},
+    "declarativeProposal": {"enabled": false},
+    "serviceWorkerProposal": {"enabled": false}
+  }
+}

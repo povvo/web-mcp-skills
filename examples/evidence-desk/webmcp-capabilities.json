@@ -1,0 +1,149 @@
+{
+  "canonicalStateOwner": "evidenceDeskApplication in src/domain.mjs",
+  "capabilities": [
+    {
+      "capability": "inspect-evidence-desk",
+      "effect": "read",
+      "handler": "inspectEvidenceDesk",
+      "humanEntrypoint": "Read the record index and selected detail.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "mcpTool": null,
+      "operation": "inspect-evidence-desk",
+      "operationModule": "./src/domain.mjs",
+      "operationSource": "new",
+      "resultIdentifiers": [
+        "deskId"
+      ],
+      "resultSummary": "Return all evidence records, the selected record, annotations, and revision.",
+      "stateReads": [
+        "records",
+        "selection",
+        "annotations",
+        "revision"
+      ],
+      "stateWrites": [],
+      "userJourney": "Inspect all sample records, their evidence states, the selected record, annotations, and revision.",
+      "visibleEffect": "No visible state change.",
+      "webmcpTool": "inspect_evidence_desk"
+    },
+    {
+      "capability": "select-evidence-record",
+      "effect": "local-write",
+      "handler": "selectEvidenceRecord",
+      "humanEntrypoint": "Activate a record in the evidence index.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "expectedRevision": {
+            "description": "Desk revision observed immediately before selection.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "recordId": {
+            "description": "Identifier of the record to select.",
+            "enum": [
+              "wpt",
+              "site-tools",
+              "deployment"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "recordId",
+          "expectedRevision"
+        ],
+        "type": "object"
+      },
+      "mcpTool": null,
+      "operation": "select-evidence-record",
+      "operationModule": "./src/domain.mjs",
+      "operationSource": "new",
+      "resultIdentifiers": [
+        "deskId",
+        "recordId"
+      ],
+      "resultSummary": "Return the selected record identity, unchanged evidence state, and committed revision.",
+      "stateReads": [
+        "records",
+        "selection",
+        "revision"
+      ],
+      "stateWrites": [
+        "selection",
+        "revision",
+        "activity"
+      ],
+      "userJourney": "Make one named evidence record the shared visible selection.",
+      "visibleEffect": "The bounded detail region displays the selected record and its unchanged evidence state.",
+      "webmcpTool": "select_evidence_record"
+    },
+    {
+      "capability": "annotate-evidence-record",
+      "effect": "local-write",
+      "handler": "annotateEvidenceRecord",
+      "humanEntrypoint": "Submit the labelled annotation form for the selected record.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "expectedRevision": {
+            "description": "Desk revision observed immediately before annotation.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "note": {
+            "description": "Factual annotation to attach to the record.",
+            "maxLength": 280,
+            "minLength": 1,
+            "type": "string"
+          },
+          "recordId": {
+            "description": "Identifier of the evidence record to annotate.",
+            "enum": [
+              "wpt",
+              "site-tools",
+              "deployment"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "recordId",
+          "note",
+          "expectedRevision"
+        ],
+        "type": "object"
+      },
+      "mcpTool": null,
+      "operation": "annotate-evidence-record",
+      "operationModule": "./src/domain.mjs",
+      "operationSource": "new",
+      "resultIdentifiers": [
+        "deskId",
+        "recordId",
+        "annotationId"
+      ],
+      "resultSummary": "Return the record identity, saved annotation, unchanged evidence state, annotation count, and committed revision.",
+      "stateReads": [
+        "records",
+        "annotations",
+        "revision"
+      ],
+      "stateWrites": [
+        "annotations",
+        "revision",
+        "activity"
+      ],
+      "userJourney": "Attach one factual note to a named record without promoting or resolving its evidence state.",
+      "visibleEffect": "The note appears under the selected record and the revision advances; the record status does not change.",
+      "webmcpTool": "annotate_evidence_record"
+    }
+  ],
+  "productSha256": "ff10770c8e8391c37cbabd9ea7c4851e7be294421b1bbcd14d0d859821b5246e",
+  "schemaVersion": "webmcp-capability-map.v1",
+  "toolsetSha256": "e433661cdf93fbaf62b6327036fe0a3ec9a7e77962ffb46992e88df8c6539445"
+}

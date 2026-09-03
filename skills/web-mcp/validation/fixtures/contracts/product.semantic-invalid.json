@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "webmcp-product.v1",
+  "mode": "create",
+  "surface": "webmcp",
+  "targets": [
+    "webmcp-document"
+  ],
+  "release": "challenge",
+  "applicationRoot": ".",
+  "toolset": "./toolset.valid-minimal.json",
+  "product": {
+    "id": "invalid-fixture",
+    "name": "Invalid product fixture",
+    "oneSentence": "Exercise semantic product failures without structural drift.",
+    "audience": ["Contract tests"],
+    "sharedArtifact": "A deterministic fixture.",
+    "humanWorkflow": {
+      "entrypoint": "Open the fixture.",
+      "operations": ["inspect-fixture"],
+      "visibleFeedback": "The fixture exposes its revision."
+    },
+    "state": {
+      "canonicalOwner": "The fixture store.",
+      "persistence": "memory",
+      "revisionField": "revision"
+    }
+  },
+  "capabilities": [
+    {
+      "id": "inspect-fixture",
+      "userJourney": "Inspect the fixture revision.",
+      "operation": {
+        "id": "inspect-fixture",
+        "handler": "inspectFixture",
+        "module": "./src/fixture.mjs",
+        "source": "new",
+        "effect": "read"
+      },
+      "webmcpTool": {"name": "inspect_fixture"},
+      "ui": {
+        "humanEntrypoint": "Open the fixture.",
+        "visibleEffect": "No visible state change."
+      },
+      "state": {
+        "reads": ["revision"],
+        "writes": []
+      },
+      "resultContract": {
+        "summary": "Return fixture identity and revision.",
+        "identifiers": ["fixtureId"],
+        "revisionField": "revision"
+      },
+      "concurrency": {"strategy": "none"},
+      "successEvidence": ["The result contains fixture identity and revision."]
+    }
+  ],
+  "profiles": {
+    "document": {
+      "enabled": false
+    },
+    "serviceWorkerProposal": {
+      "enabled": true,
+      "toolNames": [
+        "inspect_fixture"
+      ],
+      "stateModel": "session-required",
+      "sessionStrategy": "unresolved",
+      "scope": "/",
+      "workerPath": "./service-worker.js"
+    }
+  }
+}

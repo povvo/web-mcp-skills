@@ -1,0 +1,137 @@
+{
+  "schemaVersion": "webmcp-dual.v1",
+  "application": {
+    "name": "Shared Board Fixture"
+  },
+  "operations": [
+    {
+      "operationId": "board.inspect",
+      "handler": "inspectBoard",
+      "effect": "read",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "untrustedContentHint": false
+      },
+      "surfaces": {
+        "webmcp": {
+          "toolName": "inspect_visible_board",
+          "title": "Inspect visible board",
+          "description": "Read the items and revision shown on the currently open board page.",
+          "scope": "page"
+        },
+        "mcp": {
+          "toolName": "inspect_board_record",
+          "title": "Inspect board record",
+          "description": "Read the durable board items and revision without requiring the board page to be open.",
+          "scope": "service"
+        }
+      }
+    },
+    {
+      "operationId": "board.add_item",
+      "handler": "addBoardItem",
+      "effect": "remote-write",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "expectedRevision": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "title",
+          "expectedRevision"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "untrustedContentHint": false
+      },
+      "surfaces": {
+        "webmcp": {
+          "toolName": "add_visible_board_item",
+          "title": "Add item to visible board",
+          "description": "Add one item through the open board page and return its visible revision.",
+          "scope": "page"
+        },
+        "mcp": {
+          "toolName": "add_board_item",
+          "title": "Add board item",
+          "description": "Add one item to the durable board record without requiring an open page.",
+          "scope": "service"
+        }
+      }
+    },
+    {
+      "operationId": "board.select_visible_item",
+      "handler": "selectVisibleBoardItem",
+      "effect": "local-write",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          }
+        },
+        "required": [
+          "itemId"
+        ],
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "untrustedContentHint": false
+      },
+      "surfaces": {
+        "webmcp": {
+          "toolName": "select_visible_board_item",
+          "title": "Select visible board item",
+          "description": "Select an item in the currently open board interface without changing the durable board.",
+          "scope": "page"
+        }
+      }
+    },
+    {
+      "operationId": "board.read_audit",
+      "handler": "readBoardAudit",
+      "effect": "read",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
+        },
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "untrustedContentHint": false
+      },
+      "surfaces": {
+        "mcp": {
+          "toolName": "read_board_audit",
+          "title": "Read board audit",
+          "description": "Read durable board commit receipts without requiring the board page to be open.",
+          "scope": "service"
+        }
+      }
+    }
+  ]
+}

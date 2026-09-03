@@ -1,0 +1,70 @@
+<!--
+WebMCP declarative-form review scaffold.
+Compatibility branch: verify the target browser and current documentation.
+Start from the application's existing semantic form; do not replace its
+authorization, validation, confirmation, or submission logic with this file.
+-->
+<form
+  id="REPLACE_EXISTING_FORM_ID"
+  toolname="replace_with_precise_action_name"
+  tooldescription="Replace with the exact action, scope, and completion boundary.">
+
+  <div>
+    <label for="replace-field">Replace field label</label>
+    <input
+      id="replace-field"
+      name="replaceField"
+      type="text"
+      required
+      maxlength="200"
+      toolparamdescription="Replace with the field's user-facing meaning.">
+  </div>
+
+  <!-- Add toolautosubmit only after confirming the action may execute without
+       a separate human review step in the existing product workflow. -->
+  <button type="submit">Replace with truthful action label</button>
+</form>
+
+<script type="module">
+  const form = document.querySelector("#REPLACE_EXISTING_FORM_ID");
+
+  form?.addEventListener("submit", (event) => {
+    // Keep the application's existing submit/validation path authoritative.
+    // The following branch is target-browser-specific; feature-test it.
+    if (event.agentInvoked && typeof event.respondWith === "function") {
+      // event.preventDefault();
+      // event.respondWith(existingSubmitAction(...).then(result => ({
+      //   status: "submitted",
+      //   id: result.id,
+      //   visible: true,
+      // })));
+    }
+  });
+
+  window.addEventListener("toolactivated", (event) => {
+    if (event.toolName === form?.getAttribute("toolname")) {
+      // Optional: announce that the visible form was populated.
+    }
+  });
+
+  // `toolcanceled` and its dispatch target remain proposal-defined; verify the
+  // selected implementation before treating this listener as portable.
+  window.addEventListener("toolcanceled", (event) => {
+    if (event.toolName === form?.getAttribute("toolname")) {
+      // Optional: clear temporary preview state, not durable application data.
+    }
+  });
+</script>
+
+<style>
+  /* Verify exact pseudo-classes in the target browser. */
+  form:tool-form-active {
+    outline: 2px dashed currentColor;
+    outline-offset: 4px;
+  }
+
+  button:tool-submit-active {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+</style>

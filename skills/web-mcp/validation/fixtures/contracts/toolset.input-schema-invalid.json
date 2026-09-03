@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "webmcp-toolset.v1",
+  "app": {
+    "name": "Invalid Input Schema Fixture"
+  },
+  "tools": [
+    {
+      "name": "inspect_fixture",
+      "description": "Inspect the current fixture.",
+      "handler": "inspectFixture",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "fixtureId": {
+            "type": 9,
+            "description": "Fixture identifier."
+          }
+        },
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "untrustedContentHint": false
+      },
+      "registration": {
+        "lifetime": "document",
+        "exposedTo": []
+      },
+      "semantics": {
+        "effect": "read",
+        "outputTrust": "trusted",
+        "confirmation": "none",
+        "idempotency": "natural",
+        "reversible": true,
+        "preconditions": [],
+        "visibleEffect": "No visible state change.",
+        "successEvidence": [
+          "The result contains the current fixture."
+        ],
+        "failureModes": [],
+        "sensitiveInputs": []
+      }
+    }
+  ]
+}
