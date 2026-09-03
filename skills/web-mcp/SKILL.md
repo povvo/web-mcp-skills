@@ -1,7 +1,8 @@
 ---
 name: web-mcp
 description: "Create, extend, debug, test, and release WebMCP-powered web applications and ChatGPT Site tools. Use for new or existing apps, document.modelContext/registerTool, shared human-agent state, real application operations, declarative-form experiments, Service Worker WebMCP research, WebMCP-versus-MCP architecture, dual WebMCP/MCP surfaces, framework lifecycle integration, browser verification, and OpenAI WebMCP Challenge readiness. Do not use for standalone MCP-only servers, generic browser automation, or unrelated frontend work."
-compatibility: "Python 3 is required for the bundled deterministic toolkit. Node.js and project-specific toolchains are required only for applicable generated-code checks. Live browser and ChatGPT checks require those hosts."
+metadata:
+  compatibility: "Python 3 is required for the bundled deterministic toolkit. Node.js and project-specific toolchains are required only for applicable generated-code checks. Live browser and ChatGPT checks require those hosts."
 ---
 
 # WebMCP

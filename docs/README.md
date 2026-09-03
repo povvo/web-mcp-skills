@@ -1,6 +1,6 @@
 # Web MCP field manual
 
-This repository ships one portable Agent Skill and three working WebMCP applications. The skill builds the operation contract, tool schemas, adapters, tests, and release evidence. The examples show what that output looks like when the page is obliged to do something.
+This repository ships two portable Agent Skills and three working WebMCP applications. `web-mcp` builds the operation contract, tool schemas, adapters, tests, and release evidence. `web-mcp-design` supplies a source-independent visual system for identity, editorial, interface, motion, data, and presentation work. The examples show what both capabilities look like when the page is obliged to do something.
 
 WebMCP is an experimental web standard. A page registers structured tools through `document.modelContext`; a supporting agent discovers and invokes them while the page is open. The user and agent then work against the same application state, provided the application was built that way. Registration cannot rescue imaginary product logic. It has tried nothing and is already blameless.
 
@@ -17,14 +17,15 @@ WebMCP is an experimental web standard. A page registers structured tools throug
 
 | Surface | Location | Purpose |
 | --- | --- | --- |
-| Portable skill | `skills/web-mcp/` | Self-contained instructions, compiler, schemas, references, agents, validation, and icon |
+| WebMCP implementation skill | `skills/web-mcp/` | Self-contained instructions, compiler, schemas, references, agents, validation, and icon |
+| Web MCP design skill | `skills/web-mcp-design/` | Self-contained visual manual, foundations, tokens, components, patterns, accessibility rules, and generation guidance |
 | Shared Board | `examples/shared-board/` | Revision-protected inspect and add operations |
 | Release Rail | `examples/release-rail/` | Finite inspect, advance, and reopen operations |
 | Evidence Desk | `examples/evidence-desk/` | Evidence-preserving inspect, select, and annotate operations |
 | Repository banner | `assets/web-mcp-repository-banner.svg` | Human and site-tool paths converging on shared application state |
 | Official snapshots | `docs/official/snapshots/` | Supplied source material retained without editorial changes |
 
-The repository documentation may point into the skill. The installed skill never points back into this repository or `/docs`; its required knowledge travels inside `skills/web-mcp/`.
+The repository documentation may point into the skills. Neither installed skill depends on this repository or `/docs`; each skill carries its required knowledge within its own folder.
 
 ## Run the examples
 

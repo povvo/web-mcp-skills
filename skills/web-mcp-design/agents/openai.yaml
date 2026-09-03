@@ -1,0 +1,4 @@
+interface:
+  display_name: "Web MCP Design"
+  short_description: "Apply the Instrumented Monochrome language"
+  default_prompt: "Use $web-mcp-design to create or review a Web MCP artifact in Instrumented Monochrome, using JetBrains Mono and the package's source-independent rules."

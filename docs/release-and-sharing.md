@@ -1,13 +1,14 @@
 # Release and sharing
 
-There are two release units:
+There are three release units:
 
 1. the portable `web-mcp` Agent Skill;
-2. the repository containing that skill, the three examples, public documentation, brand assets, and CI.
+2. the portable `web-mcp-design` Agent Skill;
+3. the repository containing both skills, the three examples, public documentation, repository visuals, and CI.
 
 They share a commit but have different boundaries. This is why `node_modules` does not need a commemorative place in either one.
 
-## Portable skill candidate
+## Portable `web-mcp` candidate
 
 The package source is exactly `skills/web-mcp/`. A release candidate must contain:
 
@@ -19,9 +20,20 @@ The package source is exactly `skills/web-mcp/`. A release candidate must contai
 
 Build the archive, inspect its paths, extract it fresh, compare hashes, and run the full self-test from the extraction. Publish the resulting bytes as `web-mcp.skill` with byte count, archive SHA-256, tree SHA-256, source commit, toolkit version, and test summary.
 
+## Portable `web-mcp-design` candidate
+
+The package source is exactly `skills/web-mcp-design/`. A release candidate must contain:
+
+- `SKILL.md` with valid `name: web-mcp-design` frontmatter;
+- `DESIGN.md` beside the entrypoint;
+- every routed foundation, token, component, pattern, accessibility, application, output, source, proof, and handoff file;
+- no repository `/docs` dependency, dependency tree, virtual environment, cache, nested archive, secret, or absolute workspace link.
+
+Build and inspect it independently as `web-mcp-design.skill`. A passing structural validator proves the package shape; rendered visual inspection remains a separate requirement for artifacts created with the skill.
+
 ## Repository candidate
 
-The recommended public destination is `povvo/web-mcp`. Before the first external write, confirm:
+The repository destination is `povvo/web-mcp-skills`. It is currently private. Before changing its visibility or publishing a public release, confirm:
 
 - destination owner and repository name;
 - public visibility;
@@ -33,10 +45,11 @@ Do not invent a license. The OpenAI WebMCP Challenge requires a public code repo
 
 ## Clean installation
 
-After publication, verify current CLI discovery and installation from a clean temporary project:
+Verify current CLI discovery and installation from a clean temporary project. While the repository is private, the caller must authenticate to GitHub with access to `povvo/web-mcp-skills`:
 
 ```powershell
-npx --yes skills@latest add povvo/web-mcp --skill web-mcp --agent codex --copy --yes
+npx --yes skills@latest add povvo/web-mcp-skills --skill web-mcp --agent codex --copy --yes
+npx --yes skills@latest add povvo/web-mcp-skills --skill web-mcp-design --agent codex --copy --yes
 ```
 
 Record the `skills` CLI version and published commit SHA. Inspect the installed file tree, parse its `SKILL.md`, compare it with the published source, and run the bundled self-test there. Local registration is not a remote install receipt.
@@ -73,7 +86,7 @@ The repository’s three examples are reusable reference applications, not a cha
 ## Publication sequence
 
 1. Freeze source and run all local deterministic and browser checks.
-2. Build and fresh-extract `web-mcp.skill`.
+2. Build and fresh-extract `web-mcp.skill` and `web-mcp-design.skill`.
 3. Inspect the repository diff and secret scan.
 4. Confirm destination, visibility, license, and Git operation with the owner.
 5. Create/push the repository.

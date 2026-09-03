@@ -1,35 +1,42 @@
 ![Web MCP — human UI and site tools sharing one application operation and visible state](assets/web-mcp-repository-banner.svg)
 
-# Web MCP
+# Web MCP Skills
 
-Create or extend web applications whose normal interface and WebMCP tools operate the same real product state. The repository contains the portable `web-mcp` Agent Skill, three runnable reference applications, official-source snapshots, public documentation, repository visuals, and release automation.
+Create or extend web applications whose normal interface and WebMCP tools operate the same real product state. The repository contains two portable Agent Skills—`web-mcp` for product implementation and `web-mcp-design` for visual execution—plus three runnable reference applications, official-source snapshots, public documentation, repository visuals, and release automation.
 
-[![Validate skills](https://github.com/povvo/web-mcp/actions/workflows/validate-skills.yml/badge.svg)](https://github.com/povvo/web-mcp/actions/workflows/validate-skills.yml)
-[![skills.sh](https://skills.sh/b/povvo/web-mcp)](https://skills.sh/povvo/web-mcp)
+[![Validate skills](https://github.com/povvo/web-mcp-skills/actions/workflows/validate-skills.yml/badge.svg)](https://github.com/povvo/web-mcp-skills/actions/workflows/validate-skills.yml)
 
-WebMCP is an experimental web standard for pages that expose structured tools through `document.modelContext`. The skill turns that API into a complete implementation workflow: product journey, canonical operations, UI, tool contracts, generated adapters, optional MCP composition, tests, host checks, and release evidence. A registration snippet is also produced, though it is no longer asked to impersonate the application.
+WebMCP is an experimental web standard for pages that expose structured tools through `document.modelContext`. The `web-mcp` skill turns that API into a complete implementation workflow: product journey, canonical operations, UI, tool contracts, generated adapters, optional MCP composition, tests, host checks, and release evidence. The companion `web-mcp-design` skill supplies the source-independent visual system used by the repository and examples.
 
 ## Install
 
-Inspect the available skill after publication:
+Inspect the available skills:
 
 ```bash
-npx skills add povvo/web-mcp --list
+npx skills add povvo/web-mcp-skills --list
 ```
+
+The repository is private, so remote discovery and installation require GitHub authentication with access to `povvo/web-mcp-skills`.
 
 Install `web-mcp` into the current project:
 
 ```bash
-npx skills add povvo/web-mcp --skill web-mcp
+npx skills add povvo/web-mcp-skills --skill web-mcp
 ```
 
-Install it globally for Codex:
+Install the visual-system skill:
 
 ```bash
-npx skills add povvo/web-mcp --skill web-mcp --agent codex --global --yes
+npx skills add povvo/web-mcp-skills --skill web-mcp-design
 ```
 
-The installable tree is [`skills/web-mcp`](skills/web-mcp). It is self-contained and contains no `node_modules`, repository `/docs` dependency, virtual environment, or build cache.
+Install both globally for Codex:
+
+```bash
+npx skills add povvo/web-mcp-skills --skill '*' --agent codex --global --yes
+```
+
+The installable trees are [`skills/web-mcp`](skills/web-mcp) and [`skills/web-mcp-design`](skills/web-mcp-design). Each is self-contained and contains no `node_modules`, repository `/docs` dependency, virtual environment, or build cache.
 
 ## Run the examples
 
@@ -78,11 +85,12 @@ Native browser, ChatGPT Site tools, live model, MCP transport, and deployment ev
 ## Repository layout
 
 ```text
-skills/web-mcp/   portable Agent Skill
-examples/         three runnable WebMCP applications
-docs/             public manual and official snapshots
-assets/           repository banner
-.github/          structural, compiler, example, and install validation
+skills/web-mcp/          portable WebMCP implementation skill
+skills/web-mcp-design/   portable visual-system skill
+examples/                three runnable WebMCP applications
+docs/                    public manual and official snapshots
+assets/                  repository banner
+.github/                 structural, compiler, example, and install validation
 ```
 
 ## License

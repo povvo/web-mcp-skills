@@ -7,7 +7,7 @@ The portable skill lives at `skills/web-mcp/`. It can create a WebMCP-enabled ap
 After this repository is published, install only the skill with:
 
 ```powershell
-npx skills add povvo/web-mcp --skill web-mcp
+npx skills add povvo/web-mcp-skills --skill web-mcp
 ```
 
 For local inspection before publication:
